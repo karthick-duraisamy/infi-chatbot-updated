@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input, Button, Upload, message as antMessage, Tooltip, Image } from 'antd';
-import { SendOutlined, PaperClipOutlined, DeleteOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
+import { Input, Button, Upload, Card, Tooltip, message as antMessage } from 'antd';
+import { SendOutlined, PaperClipOutlined, CloseOutlined } from '@ant-design/icons';
+import type { UploadFile, UploadProps } from 'antd/es/upload';
 import { useAppDispatch } from '../hooks/useAppDispatch';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { addUserMessage, sendMessageToAI } from '../store/chatSlice';
@@ -17,12 +17,10 @@ const ChatInput: React.FC = () => {
   const textAreaRef = useRef<any>(null);
   const uploadRef = useRef<any>(null);
 
-  // Focus on mount
   useEffect(() => {
     textAreaRef.current?.focus();
   }, []);
 
-  // Re-focus after AI responds
   useEffect(() => {
     if (!isTyping) {
       setTimeout(() => {
@@ -32,13 +30,11 @@ const ChatInput: React.FC = () => {
   }, [isTyping]);
 
   const handleFileChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    // Limit to 5 files
     if (newFileList.length > 5) {
       antMessage.warning('You can upload maximum 5 files at once');
       return;
     }
-    
-    // Check file size (10MB limit per file)
+
     const validFiles = newFileList.filter(file => {
       if (file.size && file.size > 10 * 1024 * 1024) {
         antMessage.error(`${file.name} is too large. Maximum file size is 10MB.`);
@@ -46,7 +42,7 @@ const ChatInput: React.FC = () => {
       }
       return true;
     });
-    
+
     setFileList(validFiles);
   };
 
@@ -74,7 +70,6 @@ const ChatInput: React.FC = () => {
   const handleSend = async () => {
     const trimmedMessage = message.trim();
     if ((trimmedMessage || fileList.length > 0) && !isTyping) {
-      // Process attachments
       const attachments = fileList.map(file => ({
         id: file.uid,
         name: file.name,
@@ -105,79 +100,53 @@ const ChatInput: React.FC = () => {
 
   const uploadProps: UploadProps = {
     multiple: true,
-    beforeUpload: () => false, // Prevent auto upload
+    beforeUpload: () => false,
     onChange: handleFileChange,
     fileList,
     showUploadList: false,
-    accept: '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg,.gif',
+    accept: '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg,.gif,.bmp,.webp',
   };
 
   return (
     <div
       style={{
-        padding: '20px 24px',
-        background: isDark ? '#1f1f1f' : '#ffffff',
-        borderTop: `1px solid ${isDark ? '#424242' : '#f0f0f0'}`,
-        zIndex: 1000,
+        padding: '20px 24px 24px 24px',
+        background: isDark ? '#141414' : '#f5f5f5',
+        borderTop: 'none',
       }}
     >
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* File Preview Area */}
-        {fileList.length > 0 && (
-          <div
-            style={{
-              marginBottom: '12px',
-              padding: '12px',
-              background: isDark ? '#262626' : '#f5f5f5',
-              borderRadius: '8px',
-              border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-            }}
-          >
-            <div style={{ 
-              fontSize: '12px', 
-              color: isDark ? '#d9d9d9' : '#666666',
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              {fileList.length} file{fileList.length > 1 ? 's' : ''} selected:
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {fileList.map((file) => (
-                <div
-                  key={file.uid}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '6px 10px',
-                    background: isDark ? '#1f1f1f' : '#ffffff',
-                    border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    maxWidth: '200px',
-                  }}
-                >
-                  {file.type?.startsWith('image/') && file.originFileObj ? (
-                    <img
-                      src={URL.createObjectURL(file.originFileObj)}
-                      alt={file.name}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        objectFit: 'cover',
-                        borderRadius: '3px',
-                      }}
-                    />
-                  ) : (
-                    <span style={{ fontSize: '16px' }}>
-                      {getFileIcon(file.type || '')}
-                    </span>
-                  )}
-                  <div style={{ flex: 1, minWidth: 0 }}>
+      {/* File Attachments */}
+      {fileList.length > 0 && (
+        <div
+          style={{
+            marginBottom: '12px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}
+        >
+          {fileList.map((file) => (
+            <Card
+              key={file.uid}
+              size="small"
+              style={{
+                minWidth: '200px',
+                background: isDark ? '#262626' : '#ffffff',
+                border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
+              }}
+              bodyStyle={{ padding: '8px 12px' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                  <span style={{ marginRight: '8px', fontSize: '16px' }}>
+                    {getFileIcon(file.type || '')}
+                  </span>
+                  <div style={{ minWidth: 0, flex: 1 }}>
                     <div
                       style={{
+                        fontSize: '12px',
+                        fontWeight: 500,
                         color: isDark ? '#ffffff' : '#000000',
-                        fontWeight: '500',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
@@ -185,35 +154,54 @@ const ChatInput: React.FC = () => {
                     >
                       {file.name}
                     </div>
-                    <div style={{ color: isDark ? '#999999' : '#666666' }}>
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        color: isDark ? '#d9d9d9' : '#666666',
+                        marginTop: '2px',
+                      }}
+                    >
                       {formatFileSize(file.size || 0)}
                     </div>
                   </div>
-                  <Button
-                    type="text"
-                    size="small"
-                    icon={<DeleteOutlined />}
-                    onClick={() => removeFile(file)}
-                    style={{
-                      color: isDark ? '#ff4d4f' : '#ff4d4f',
-                      padding: '2px',
-                      minWidth: 'auto',
-                      height: 'auto',
-                    }}
-                  />
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<CloseOutlined />}
+                  onClick={() => removeFile(file)}
+                  style={{
+                    marginLeft: '8px',
+                    color: isDark ? '#d9d9d9' : '#666666',
+                    minWidth: 'auto',
+                    width: '20px',
+                    height: '20px',
+                    padding: 0,
+                  }}
+                />
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
 
-        {/* Input Area */}
+      {/* Input Container */}
+      <div
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          position: 'relative',
+        }}
+      >
         <div
           style={{
-            width: '100%',
             display: 'flex',
-            alignItems: 'center',
-            gap: '0px',
+            alignItems: 'flex-end',
+            background: isDark ? '#262626' : '#ffffff',
+            border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
+            borderRadius: '24px',
+            padding: '8px',
+            boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)',
           }}
         >
           <Upload {...uploadProps} ref={uploadRef}>
@@ -223,84 +211,63 @@ const ChatInput: React.FC = () => {
                 icon={<PaperClipOutlined />}
                 disabled={isTyping}
                 style={{
-                  height: 'auto',
-                  minHeight: '40px',
-                  borderRadius: '24px 0 0 24px',
+                  height: '40px',
+                  width: '40px',
+                  borderRadius: '20px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  paddingLeft: '16px',
-                  paddingRight: '12px',
                   fontSize: '16px',
                   color: isDark ? '#d9d9d9' : '#666666',
-                  background: isDark ? '#262626' : '#fafafa',
-                  border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-                  borderRight: 'none',
+                  margin: '0 4px',
                 }}
               />
             </Tooltip>
           </Upload>
+
           <TextArea
             ref={textAreaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder={fileList.length > 0 ? "Add a message (optional)..." : "Ask me about bookings, payments, or generate custom reports..."}
+            placeholder={fileList.length > 0 ? "Add a message (optional)..." : "Type a message..."}
             autoSize={{ minRows: 1, maxRows: 4 }}
             disabled={isTyping}
+            variant="borderless"
             style={{
               flex: 1,
               resize: 'none',
-              borderRadius: '0',
-              background: isDark ? '#262626' : '#fafafa',
-              border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-              borderLeft: 'none',
-              borderRight: 'none',
-              color: isDark ? '#ffffff' : '#000000',
+              padding: '8px 12px',
               fontSize: '14px',
-              padding: '12px 16px',
-              maxHeight: '120px',
-              overflowY: 'auto',
-              boxSizing: 'border-box',
-              minHeight: "40px !important"
+              lineHeight: '20px',
+              background: 'transparent',
+              color: isDark ? '#ffffff' : '#000000',
+            }}
+            styles={{
+              textarea: {
+                background: 'transparent !important',
+              }
             }}
           />
+
           <Button
             type="primary"
             icon={<SendOutlined />}
             onClick={handleSend}
-            disabled={(!message.trim() && fileList.length === 0) || isTyping}
-            loading={isTyping}
+            disabled={isTyping || (!message.trim() && fileList.length === 0)}
             style={{
-              height: 'auto',
-              minHeight: '40px',
-              borderRadius: '0 24px 24px 0',
+              height: '40px',
+              width: '40px',
+              borderRadius: '20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingLeft: '20px',
-              paddingRight: '20px',
-              fontSize: '14px',
-              fontWeight: '500',
-              boxSizing: 'border-box',
+              marginLeft: '4px',
+              background: '#4285f4',
+              borderColor: '#4285f4',
+              opacity: (isTyping || (!message.trim() && fileList.length === 0)) ? 0.5 : 1,
             }}
-          >
-            <span style={{ visibility: isTyping ? 'hidden' : 'visible' }}>
-              {fileList.length > 0 && !message.trim() ? 'Send Files' : 'Send'}
-            </span>
-          </Button>
-        </div>
-
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: '12px',
-            color: isDark ? '#666666' : '#999999',
-            fontSize: '12px',
-            fontWeight: '400',
-          }}
-        >
-          Press Enter to send, Shift+Enter for new line
+          />
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
+
 import React, { useEffect } from 'react';
-import { Layout, ConfigProvider, theme } from 'antd';
+import { ConfigProvider, theme, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../hooks/useAppSelector';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import ThemeToggle from './ThemeToggle';
-import { useLazyGetresponse1dataQuery } from '../services/chatService';
-
-const { Content, Header } = Layout;
+import { useLazyGetresponse1dataQuery } from '../services/service';
 
 const ChatContainer: React.FC = () => {
   const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
@@ -44,84 +44,135 @@ const ChatContainer: React.FC = () => {
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <Layout style={{ height: '100vh', overflow: 'hidden' }}>
-        <Header
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          background: isDark ? '#141414' : '#f5f5f5',
+        }}
+      >
+        {/* Left Sidebar */}
+        <div
           style={{
+            width: '280px',
             background: isDark ? '#1f1f1f' : '#ffffff',
-            borderBottom: `1px solid ${isDark ? '#424242' : '#f0f0f0'}`,
-            padding: '0 24px',
+            borderRight: `1px solid ${isDark ? '#424242' : '#e8e8e8'}`,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: '64px',
-            zIndex: 1000,
+            flexDirection: 'column',
+            padding: '20px 16px',
           }}
         >
-          {/* Left Side: Logo and Title */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <div
+          {/* Sidebar Header */}
+          <div style={{ marginBottom: '24px' }}>
+            <h2
               style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '14px',
+                margin: 0,
+                fontSize: '18px',
+                fontWeight: 600,
+                color: '#4285f4',
+                marginBottom: '20px',
               }}
             >
-              AI
-            </div>
-            <div style={{ lineHeight: 1.2 }}>
+              Airline Assistant
+            </h2>
+            
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              block
+              style={{
+                height: '40px',
+                borderRadius: '8px',
+                fontWeight: 500,
+                background: '#4285f4',
+                borderColor: '#4285f4',
+              }}
+            >
+              New Chat
+            </Button>
+          </div>
+
+          {/* Theme Toggle at bottom */}
+          <div style={{ marginTop: 'auto' }}>
+            <ThemeToggle />
+          </div>
+        </div>
+
+        {/* Main Chat Area */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            background: isDark ? '#141414' : '#f5f5f5',
+          }}
+        >
+          {/* Chat Header */}
+          <div
+            style={{
+              padding: '16px 24px',
+              background: isDark ? '#1f1f1f' : '#ffffff',
+              borderBottom: `1px solid ${isDark ? '#424242' : '#e8e8e8'}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
               <h3
                 style={{
                   margin: 0,
-                  color: isDark ? '#ffffff' : '#000000',
                   fontSize: '16px',
+                  fontWeight: 600,
+                  color: isDark ? '#ffffff' : '#000000',
                 }}
               >
-                Airline Reporting Assistant
+                Airline Report Assistant
               </h3>
-              <p
+              <div
                 style={{
-                  margin: 0,
-                  color: isDark ? '#d9d9d9' : '#666666',
-                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: '4px',
                 }}
               >
-                Generate custom reports with natural language
-              </p>
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: '#52c41a',
+                    marginRight: '6px',
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: '12px',
+                    color: '#52c41a',
+                    fontWeight: 500,
+                  }}
+                >
+                  Online
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Right Side: Theme Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <ThemeToggle />
+          {/* Chat Content */}
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+            }}
+          >
+            <MessageList />
+            <ChatInput />
           </div>
-        </Header>
-
-        <Content
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: 'calc(100vh - 64px)',
-            background: isDark ? '#141414' : '#fafafa',
-            overflow: 'hidden',
-          }}
-        >
-          <MessageList />
-          <ChatInput />
-        </Content>
-      </Layout>
+        </div>
+      </div>
     </ConfigProvider>
   );
 };

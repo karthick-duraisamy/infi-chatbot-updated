@@ -1,5 +1,5 @@
+
 import React, { useEffect, useRef } from 'react';
-import { List, Spin } from 'antd';
 import { useAppSelector } from '../hooks/useAppSelector';
 import MessageItem from './MessageItem';
 import TypingIndicator from './TypingIndicator';
@@ -22,36 +22,60 @@ const MessageList: React.FC = () => {
       style={{
         flex: 1,
         overflow: 'auto',
-        background: isDark ? '#141414' : '#fafafa',
+        padding: '0',
+        background: isDark ? '#141414' : '#f5f5f5',
       }}
     >
-      <div style={{ 
-        maxWidth: '800px', 
-        margin: '0 auto', 
-        padding: '24px',
-        minHeight: '100%',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        <List
-          dataSource={messages}
-          split={false}
-          style={{ flex: 1 }}
-          renderItem={(message) => (
-            <List.Item style={{ border: 'none', padding: '12px 0' }}>
-              <MessageItem message={message} />
-            </List.Item>
-          )}
-        />
-        
-        {isTyping && (
-          <div style={{ padding: '12px 0' }}>
-            <TypingIndicator />
+      {messages.length === 0 ? (
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '500px',
+              margin: '0 auto',
+            }}
+          >
+            <h1
+              style={{
+                fontSize: '32px',
+                fontWeight: 600,
+                color: isDark ? '#ffffff' : '#000000',
+                margin: '0 0 16px 0',
+                lineHeight: 1.2,
+              }}
+            >
+              Welcome to Airline Report Assistant!
+            </h1>
+            <p
+              style={{
+                fontSize: '16px',
+                color: isDark ? '#d9d9d9' : '#666666',
+                margin: 0,
+                lineHeight: 1.5,
+              }}
+            >
+              Ask me about airline reports, schedules, or analytics to get started.
+            </p>
           </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
+        </div>
+      ) : (
+        <div style={{ padding: '20px' }}>
+          {messages.map((message) => (
+            <MessageItem key={message.id} message={message} />
+          ))}
+          {isTyping && <TypingIndicator />}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
     </div>
   );
 };
