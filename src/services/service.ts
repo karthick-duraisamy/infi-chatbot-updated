@@ -3,10 +3,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const apiUrl = `${window.location.origin}/grmadmin/admin`;
 
 // Define a service using a base URL
-const GRMConfigSerice = createApi({
+const ChatBotSerice = createApi({
   reducerPath: "GRMConfig",
   baseQuery: fetchBaseQuery({
-    baseUrl: apiUrl,
+    baseUrl: '/',
     prepareHeaders: (headers, { endpoint }) => {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -21,4 +21,4 @@ const GRMConfigSerice = createApi({
   }),
   endpoints: () => ({}),
 });
-export { GRMConfigSerice, apiUrl };
+export { ChatBotSerice, apiUrl };

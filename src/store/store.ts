@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import chatReducer from './chatSlice';
 import themeReducer from './themeSlice';
-import { GRMConfigSerice } from "../services/service";
+import { ChatBotSerice } from "../services/service";
 
 export const store = configureStore({
   reducer: {
     chat: chatReducer, // ✅ key must match state slice
     theme: themeReducer,
-    [GRMConfigSerice.reducerPath]: GRMConfigSerice.reducer, // ✅ key from RTK Query service
+    [ChatBotSerice.reducerPath]: ChatBotSerice.reducer, // ✅ key from RTK Query service
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(GRMConfigSerice.middleware),
+    getDefaultMiddleware().concat(ChatBotSerice.middleware),
 });
 
 export type AppState = ReturnType<typeof store.getState>;
