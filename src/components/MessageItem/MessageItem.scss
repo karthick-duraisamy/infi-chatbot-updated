@@ -80,6 +80,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
 
   &--user {
     max-width: 70%;
@@ -96,6 +97,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .message-card {
@@ -132,6 +134,8 @@
   font-size: 14px;
   line-height: 1.5;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   &--user {
     color: white;
@@ -143,6 +147,76 @@
 
   &--ai-dark {
     color: #ffffff;
+  }
+
+  // Table styling for HTML content
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 12px;
+    overflow: hidden;
+    border-radius: 6px;
+    
+    &.dataframe {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      max-width: 100%;
+      
+      thead, tbody, tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
+    }
+  }
+
+  th, td {
+    padding: 8px 6px;
+    text-align: left;
+    border: 1px solid;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 120px;
+    
+    &--ai-light {
+      border-color: #d9d9d9;
+    }
+    
+    &--ai-dark {
+      border-color: #424242;
+    }
+  }
+
+  th {
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  // Table wrapper for horizontal scroll
+  .table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    margin: 12px 0;
+    
+    table {
+      min-width: 600px;
+      margin: 0;
+    }
+  }
+
+  // Responsive table styling
+  @media (max-width: 768px) {
+    table {
+      font-size: 11px;
+    }
+    
+    th, td {
+      padding: 4px 3px;
+      max-width: 80px;
+    }
   }
 }
 

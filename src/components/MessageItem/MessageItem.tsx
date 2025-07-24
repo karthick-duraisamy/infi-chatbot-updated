@@ -54,6 +54,17 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   };
 
   const renderContent = (content: string) => {
+    // Check if content contains a table and wrap it for responsive handling
+    if (content.includes('<table')) {
+      const wrappedContent = content.replace(
+        /<table([^>]*)>/g,
+        '<div class="table-wrapper"><table$1>'
+      ).replace(
+        /<\/table>/g,
+        '</table></div>'
+      );
+      return <div dangerouslySetInnerHTML={{ __html: wrappedContent }} />;
+    }
     return <div dangerouslySetInnerHTML={{ __html: content }} />;
   };
 
