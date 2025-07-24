@@ -114,16 +114,16 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage = fals
                     />
                   ) : (
                     <div
-                      className={`file-icon-container file-icon-container--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'} ${attachment.preview ? 'file-icon-container--clickable' : ''}`}
-                      onClick={() => attachment.preview && handleFilePreview(attachment)}
-                    >
-                      {getFileIcon(attachment.type)}
-                      {attachment.preview && (
-                        <div className="view-overlay">
-                          View
-                        </div>
-                      )}
-                    </div>
+                    className={`file-icon-container file-icon-container--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'} ${(attachment.preview || attachment.url || attachment.downloadUrl) ? 'file-icon-container--clickable' : ''}`}
+                    onClick={() => handleFilePreview(attachment)}
+                  >
+                    {getFileIcon(attachment.type)}
+                    {(attachment.preview || attachment.url || attachment.downloadUrl) && (
+                      <div className="view-overlay">
+                        View
+                      </div>
+                    )}
+                  </div>
                   )}
 
                   {/* File Info */}

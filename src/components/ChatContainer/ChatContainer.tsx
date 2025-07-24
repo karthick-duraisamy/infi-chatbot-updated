@@ -83,10 +83,6 @@ const ChatContainer: React.FC = () => {
               <h3 className={`chat-header__title--${isDark ? 'dark' : 'light'}`}>
                 Airline Report Assistant
               </h3>
-              <div className="status-indicator">
-                <div className="status-dot" />
-                <span className="status-text">Online</span>
-              </div>
             </div>
           </div>
 

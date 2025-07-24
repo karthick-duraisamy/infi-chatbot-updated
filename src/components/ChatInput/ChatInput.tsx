@@ -77,6 +77,8 @@ const ChatInput: React.FC = () => {
         type: file.type || 'application/octet-stream',
         size: file.size || 0,
         preview: file.type?.startsWith('image/') ? URL.createObjectURL(file.originFileObj as File) : undefined,
+        file: file.originFileObj, // Keep reference to original file for non-image preview
+        url: !file.type?.startsWith('image/') ? URL.createObjectURL(file.originFileObj as File) : undefined,
       }));
 
       dispatch(addUserMessage({ 
@@ -95,7 +97,10 @@ const ChatInput: React.FC = () => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      const trimmedMessage = message.trim();
+      if ((trimmedMessage || fileList.length > 0) && !isTyping) {
+        handleSend();
+      }
     }
   };
 
