@@ -137,7 +137,7 @@ const ChatInput: React.FC = () => {
 
   return (
     <div className={`chat-input chat-input--${isDark ? 'dark' : 'light'}`}>
-      {/* Inline Image Previews */}
+      {/* Inline File Previews - ChatGPT Style */}
       {fileList.length > 0 && (
         <div className={`cls-cb-inline-previews cls-cb-inline-previews--${isDark ? 'dark' : 'light'}`}>
           {fileList.map((file) => {
@@ -152,7 +152,7 @@ const ChatInput: React.FC = () => {
                       className="cls-cb-image-preview"
                     />
                     <div className="cls-cb-image-overlay">
-                      <Tooltip title="Remove image">
+                      <Tooltip title="Remove">
                         <Button
                           type="text"
                           size="small"
@@ -162,15 +162,11 @@ const ChatInput: React.FC = () => {
                         />
                       </Tooltip>
                     </div>
-                    <div className={`cls-cb-image-name cls-cb-image-name--${isDark ? 'dark' : 'light'}`}>
-                      {file.name}
-                    </div>
                   </div>
                 ) : (
                   <Card
                     size="small"
                     className={`cls-cb-file-card cls-cb-file-card--${isDark ? 'dark' : 'light'}`}
-                    bodyStyle={{ padding: '8px 12px' }}
                   >
                     <div className="cls-cb-file-content">
                       <div className="cls-cb-file-info">
@@ -186,7 +182,7 @@ const ChatInput: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <Tooltip title="Remove file">
+                      <Tooltip title="Remove">
                         <Button
                           type="text"
                           size="small"

@@ -12,49 +12,57 @@
   }
 }
 
-// Inline previews container
+// Inline previews container - ChatGPT style
 .cls-cb-inline-previews {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  max-height: 200px;
+  gap: 8px;
+  max-height: 120px;
   overflow-y: auto;
-  padding: 8px 0;
+  padding: 8px 12px;
+  border-radius: 8px;
   
   &--light {
-    border-bottom: 1px solid #f0f0f0;
+    background: #f7f7f8;
+    border: 1px solid #e3e3e3;
   }
   
   &--dark {
-    border-bottom: 1px solid #424242;
+    background: #2f2f2f;
+    border: 1px solid #4a4a4a;
   }
 }
 
-// Individual preview item
+// Individual preview item - compact layout
 .cls-cb-preview-item {
   position: relative;
+  border-radius: 6px;
+  overflow: hidden;
   
   &--light {
-    // Light theme styles handled by child elements
+    background: #ffffff;
+    border: 1px solid #e3e3e3;
   }
   
   &--dark {
-    // Dark theme styles handled by child elements
+    background: #404040;
+    border: 1px solid #555555;
   }
 }
 
-// Image preview container
+// Image preview container - smaller like ChatGPT
 .cls-cb-image-preview-container {
   position: relative;
-  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
   overflow: hidden;
-  background: #f5f5f5;
+  cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0.8;
     
     .cls-cb-image-overlay {
       opacity: 1;
@@ -62,101 +70,85 @@
   }
 }
 
-// Image preview
+// Image preview - smaller thumbnail
 .cls-cb-image-preview {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid #e8e8e8;
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  display: block;
 }
 
 // Overlay for remove button
 .cls-cb-image-overlay {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 2px;
+  right: 2px;
   opacity: 0;
   transition: opacity 0.2s ease;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
-  padding: 2px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Remove button for images
 .cls-cb-remove-btn {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   padding: 0;
-  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  &--light {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.6);
-    
-    &:hover {
-      background: rgba(255, 0, 0, 0.8);
-    }
-  }
-  
-  &--dark {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.8);
-    
-    &:hover {
-      background: rgba(255, 0, 0, 0.8);
-    }
-  }
-}
-
-// Image name label
-.cls-cb-image-name {
-  position: absolute;
-  bottom: -20px;
-  left: 0;
-  right: 0;
-  text-align: center;
   font-size: 10px;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 80px;
   
-  &--light {
-    color: #666666;
-  }
-  
-  &--dark {
-    color: #d9d9d9;
+  &:hover {
+    color: #ff6b6b;
   }
 }
 
-// Non-image file card
+// Non-image file card - compact design
 .cls-cb-file-card {
-  min-width: 180px;
-  max-width: 200px;
+  width: 140px;
+  height: 64px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
   
   &--light {
     background: #ffffff;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #e3e3e3;
   }
   
   &--dark {
-    background: #262626;
-    border: 1px solid #424242;
+    background: #404040;
+    border: 1px solid #555555;
+  }
+  
+  .ant-card-body {
+    padding: 8px !important;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 }
 
-// File card content
+// File card content - horizontal layout
 .cls-cb-file-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   
   .cls-cb-file-info {
     display: flex;
@@ -165,8 +157,9 @@
     flex: 1;
     
     .cls-cb-file-icon {
-      margin-right: 8px;
-      font-size: 16px;
+      margin-right: 6px;
+      font-size: 14px;
+      flex-shrink: 0;
     }
     
     .cls-cb-file-details {
@@ -174,31 +167,32 @@
       flex: 1;
       
       .cls-cb-file-name {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: 1.2;
+        margin-bottom: 2px;
         
         &--light {
-          color: #000000;
+          color: #1a1a1a;
         }
         
         &--dark {
-          color: #ffffff;
+          color: #e8e8e8;
         }
       }
       
       .cls-cb-file-size {
-        font-size: 11px;
-        margin-top: 2px;
+        font-size: 9px;
         
         &--light {
-          color: #666666;
+          color: #737373;
         }
         
         &--dark {
-          color: #d9d9d9;
+          color: #a3a3a3;
         }
       }
     }
@@ -207,27 +201,32 @@
 
 // Remove button for non-image files
 .cls-cb-remove-file-btn {
-  margin-left: 8px;
+  margin-left: 4px;
   min-width: auto;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   padding: 0;
+  border: none;
+  font-size: 10px;
+  flex-shrink: 0;
   
   &--light {
-    color: #666666;
+    color: #737373;
+    background: transparent;
     
     &:hover {
-      color: #ff4d4f;
-      background: #fff1f0;
+      color: #ef4444;
+      background: #fef2f2;
     }
   }
   
   &--dark {
-    color: #d9d9d9;
+    color: #a3a3a3;
+    background: transparent;
     
     &:hover {
-      color: #ff7875;
-      background: #2a1215;
+      color: #f87171;
+      background: #2d1b20;
     }
   }
 }
