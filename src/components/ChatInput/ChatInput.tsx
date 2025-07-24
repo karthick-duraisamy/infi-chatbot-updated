@@ -30,6 +30,17 @@ const ChatInput: React.FC = () => {
     }
   }, [isTyping]);
 
+  // Clean up preview URLs when component unmounts or files change
+  useEffect(() => {
+    return () => {
+      fileList.forEach(file => {
+        if (file.preview) {
+          URL.revokeObjectURL(file.preview);
+        }
+      });
+    };
+  }, [fileList]);
+
   const handleFileChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     if (newFileList.length > 5) {
       antMessage.warning('You can upload maximum 5 files at once');
@@ -44,7 +55,18 @@ const ChatInput: React.FC = () => {
       return true;
     });
 
-    setFileList(validFiles);
+    // Generate preview URLs for images
+    const filesWithPreviews = validFiles.map(file => {
+      if (file.originFileObj && file.type?.startsWith('image/')) {
+        return {
+          ...file,
+          preview: URL.createObjectURL(file.originFileObj)
+        };
+      }
+      return file;
+    });
+
+    setFileList(filesWithPreviews);
   };
 
   const removeFile = (file: UploadFile) => {
@@ -115,40 +137,70 @@ const ChatInput: React.FC = () => {
 
   return (
     <div className={`chat-input chat-input--${isDark ? 'dark' : 'light'}`}>
-      {/* File Attachments */}
+      {/* Inline Image Previews */}
       {fileList.length > 0 && (
-        <div className="file-attachments">
-          {fileList.map((file) => (
-            <Card
-              key={file.uid}
-              size="small"
-              className={`file-card file-card--${isDark ? 'dark' : 'light'}`}
-              bodyStyle={{ padding: '8px 12px' }}
-            >
-              <div className="file-card-content">
-                <div className="file-info">
-                  <span className="file-icon">
-                    {getFileIcon(file.type || '')}
-                  </span>
-                  <div className="file-details">
-                    <div className={`file-name file-name--${isDark ? 'dark' : 'light'}`}>
+        <div className={`cls-cb-inline-previews cls-cb-inline-previews--${isDark ? 'dark' : 'light'}`}>
+          {fileList.map((file) => {
+            const isImage = file.type?.startsWith('image/');
+            return (
+              <div key={file.uid} className={`cls-cb-preview-item cls-cb-preview-item--${isDark ? 'dark' : 'light'}`}>
+                {isImage ? (
+                  <div className="cls-cb-image-preview-container">
+                    <img
+                      src={file.preview}
+                      alt={file.name}
+                      className="cls-cb-image-preview"
+                    />
+                    <div className="cls-cb-image-overlay">
+                      <Tooltip title="Remove image">
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<CloseOutlined />}
+                          onClick={() => removeFile(file)}
+                          className={`cls-cb-remove-btn cls-cb-remove-btn--${isDark ? 'dark' : 'light'}`}
+                        />
+                      </Tooltip>
+                    </div>
+                    <div className={`cls-cb-image-name cls-cb-image-name--${isDark ? 'dark' : 'light'}`}>
                       {file.name}
                     </div>
-                    <div className={`file-size file-size--${isDark ? 'dark' : 'light'}`}>
-                      {formatFileSize(file.size || 0)}
-                    </div>
                   </div>
-                </div>
-                <Button
-                  type="text"
-                  size="small"
-                  icon={<CloseOutlined />}
-                  onClick={() => removeFile(file)}
-                  className={`remove-file-btn remove-file-btn--${isDark ? 'dark' : 'light'}`}
-                />
+                ) : (
+                  <Card
+                    size="small"
+                    className={`cls-cb-file-card cls-cb-file-card--${isDark ? 'dark' : 'light'}`}
+                    bodyStyle={{ padding: '8px 12px' }}
+                  >
+                    <div className="cls-cb-file-content">
+                      <div className="cls-cb-file-info">
+                        <span className="cls-cb-file-icon">
+                          {getFileIcon(file.type || '')}
+                        </span>
+                        <div className="cls-cb-file-details">
+                          <div className={`cls-cb-file-name cls-cb-file-name--${isDark ? 'dark' : 'light'}`}>
+                            {file.name}
+                          </div>
+                          <div className={`cls-cb-file-size cls-cb-file-size--${isDark ? 'dark' : 'light'}`}>
+                            {formatFileSize(file.size || 0)}
+                          </div>
+                        </div>
+                      </div>
+                      <Tooltip title="Remove file">
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<CloseOutlined />}
+                          onClick={() => removeFile(file)}
+                          className={`cls-cb-remove-file-btn cls-cb-remove-file-btn--${isDark ? 'dark' : 'light'}`}
+                        />
+                      </Tooltip>
+                    </div>
+                  </Card>
+                )}
               </div>
-            </Card>
-          ))}
+            );
+          })}
         </div>
       )}
 
