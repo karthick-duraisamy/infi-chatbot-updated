@@ -1,0 +1,90 @@
+
+.cls-cb-chat-container {
+  height: 100vh;
+  display: flex;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--conversation-bg);
+}
+
+.cls-cb-sidebar {
+  width: 280px;
+  background: var(--recentAction-bg);
+  border-right: 1px solid var(--textarea-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+}
+
+.cls-cb-sidebar-header {
+  margin-bottom: 24px;
+}
+
+.cls-cb-sidebar-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #4285f4;
+  margin-bottom: 20px;
+}
+
+.cls-cb-new-chat-btn {
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 500;
+  background: #4285f4;
+  border-color: #4285f4;
+}
+
+.cls-cb-theme-toggle-wrapper {
+  margin-top: auto;
+}
+
+.cls-cb-main-chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--conversation-bg);
+}
+
+.cls-cb-chat-header {
+  padding: 16px 24px;
+  background: var(--chatHeader-bg);
+  border-bottom: 1px solid var(--textarea-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cls-cb-chat-header-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--chatHeader-color);
+}
+
+.cls-cb-status-indicator {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.cls-cb-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #52c41a;
+  margin-right: 6px;
+}
+
+.cls-cb-status-text {
+  font-size: 12px;
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.cls-cb-chat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}

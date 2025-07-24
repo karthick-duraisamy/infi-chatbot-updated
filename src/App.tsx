@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
-import ChatContainer from './components/ChatContainer';
+import ChatContainer from './components/ChatContainer/ChatContainer';
 
 function App() {
   return (

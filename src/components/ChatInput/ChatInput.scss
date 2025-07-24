@@ -1,0 +1,127 @@
+
+.cls-cb-chat-input-container {
+  padding: 20px 24px 24px 24px;
+  background: var(--textarea-bg);
+  border-top: none;
+}
+
+.cls-cb-file-attachments {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cls-cb-file-card {
+  min-width: 200px;
+  background: var(--conversation-bg);
+  border: 1px solid var(--textarea-bg);
+
+  .ant-card-body {
+    padding: 8px 12px;
+  }
+}
+
+.cls-cb-file-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cls-cb-file-info {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.cls-cb-file-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.cls-cb-file-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.cls-cb-file-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--conversation-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cls-cb-file-size {
+  font-size: 11px;
+  color: var(--recentAction-color);
+  margin-top: 2px;
+}
+
+.cls-cb-file-remove-btn {
+  margin-left: 8px;
+  color: var(--recentAction-color);
+  min-width: auto;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
+
+.cls-cb-input-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.cls-cb-input-container {
+  display: flex;
+  align-items: flex-end;
+  background: var(--conversation-bg);
+  border: 1px solid var(--textarea-bg);
+  border-radius: 24px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cls-cb-attachment-btn {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--recentAction-color);
+  margin: 0 4px;
+}
+
+.cls-cb-text-area {
+  flex: 1;
+  resize: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  background: transparent;
+  color: var(--conversation-color);
+
+  .ant-input {
+    background: transparent !important;
+  }
+}
+
+.cls-cb-send-btn {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  background: #4285f4;
+  border-color: #4285f4;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}

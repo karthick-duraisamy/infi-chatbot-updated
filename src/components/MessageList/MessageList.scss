@@ -1,0 +1,45 @@
+
+.cls-cb-message-list {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+  background: var(--conversation-bg);
+}
+
+.cls-cb-empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.cls-cb-empty-state-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cls-cb-welcome-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--conversation-color);
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.cls-cb-welcome-subtitle {
+  font-size: 16px;
+  color: var(--recentAction-color);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cls-cb-messages-content {
+  padding: 20px;
+}
+
+.cls-cb-messages-end {
+  /* Scroll anchor element */
+}
