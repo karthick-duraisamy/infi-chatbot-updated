@@ -1,4 +1,3 @@
-
 // Theme SCSS Variables
 // Base CSS custom properties that will be overridden by theme classes
 
@@ -40,6 +39,7 @@ body.dark {
 
 // SCSS Variables for easier usage (optional mixins)
 @mixin theme-variables {
+
   // Recent Action Section
   .recent-action {
     background-color: var(--recentAction-bg);
