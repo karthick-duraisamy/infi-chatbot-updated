@@ -5,6 +5,7 @@ import type { UploadFile, UploadProps } from 'antd/es/upload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { addUserMessage, sendMessageToAI } from '../../store/chatSlice';
+import './ChatInput.scss';
 
 const { TextArea } = Input;
 
@@ -108,59 +109,27 @@ const ChatInput: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        padding: '20px 24px 24px 24px',
-        background: isDark ? '#141414' : '#f5f5f5',
-        borderTop: 'none',
-      }}
-    >
+    <div className={`chat-input chat-input--${isDark ? 'dark' : 'light'}`}>
       {/* File Attachments */}
       {fileList.length > 0 && (
-        <div
-          style={{
-            marginBottom: '12px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-          }}
-        >
+        <div className="file-attachments">
           {fileList.map((file) => (
             <Card
               key={file.uid}
               size="small"
-              style={{
-                minWidth: '200px',
-                background: isDark ? '#262626' : '#ffffff',
-                border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-              }}
+              className={`file-card file-card--${isDark ? 'dark' : 'light'}`}
               bodyStyle={{ padding: '8px 12px' }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-                  <span style={{ marginRight: '8px', fontSize: '16px' }}>
+              <div className="file-card-content">
+                <div className="file-info">
+                  <span className="file-icon">
                     {getFileIcon(file.type || '')}
                   </span>
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div
-                      style={{
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        color: isDark ? '#ffffff' : '#000000',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
+                  <div className="file-details">
+                    <div className={`file-name file-name--${isDark ? 'dark' : 'light'}`}>
                       {file.name}
                     </div>
-                    <div
-                      style={{
-                        fontSize: '11px',
-                        color: isDark ? '#d9d9d9' : '#666666',
-                        marginTop: '2px',
-                      }}
-                    >
+                    <div className={`file-size file-size--${isDark ? 'dark' : 'light'}`}>
                       {formatFileSize(file.size || 0)}
                     </div>
                   </div>
@@ -170,14 +139,7 @@ const ChatInput: React.FC = () => {
                   size="small"
                   icon={<CloseOutlined />}
                   onClick={() => removeFile(file)}
-                  style={{
-                    marginLeft: '8px',
-                    color: isDark ? '#d9d9d9' : '#666666',
-                    minWidth: 'auto',
-                    width: '20px',
-                    height: '20px',
-                    padding: 0,
-                  }}
+                  className={`remove-file-btn remove-file-btn--${isDark ? 'dark' : 'light'}`}
                 />
               </div>
             </Card>
@@ -186,41 +148,15 @@ const ChatInput: React.FC = () => {
       )}
 
       {/* Input Container */}
-      <div
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            background: isDark ? '#262626' : '#ffffff',
-            border: `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
-            borderRadius: '24px',
-            padding: '8px',
-            boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)',
-          }}
-        >
+      <div className="input-container">
+        <div className={`input-wrapper input-wrapper--${isDark ? 'dark' : 'light'}`}>
           <Upload {...uploadProps} ref={uploadRef}>
             <Tooltip title="Attach files (PDF, Images, Documents)">
               <Button
                 type="text"
                 icon={<PaperClipOutlined />}
                 disabled={isTyping}
-                style={{
-                  height: '40px',
-                  width: '40px',
-                  borderRadius: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '16px',
-                  color: isDark ? '#d9d9d9' : '#666666',
-                  margin: '0 4px',
-                }}
+                className={`attach-button attach-button--${isDark ? 'dark' : 'light'}`}
               />
             </Tooltip>
           </Upload>
@@ -234,15 +170,7 @@ const ChatInput: React.FC = () => {
             autoSize={{ minRows: 1, maxRows: 4 }}
             disabled={isTyping}
             variant="borderless"
-            style={{
-              flex: 1,
-              resize: 'none',
-              padding: '8px 12px',
-              fontSize: '14px',
-              lineHeight: '20px',
-              background: 'transparent',
-              color: isDark ? '#ffffff' : '#000000',
-            }}
+            className={`text-area text-area--${isDark ? 'dark' : 'light'}`}
             styles={{
               textarea: {
                 background: 'transparent !important',
@@ -255,18 +183,7 @@ const ChatInput: React.FC = () => {
             icon={<SendOutlined />}
             onClick={handleSend}
             disabled={isTyping || (!message.trim() && fileList.length === 0)}
-            style={{
-              height: '40px',
-              width: '40px',
-              borderRadius: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: '4px',
-              background: '#4285f4',
-              borderColor: '#4285f4',
-              opacity: (isTyping || (!message.trim() && fileList.length === 0)) ? 0.5 : 1,
-            }}
+            className="send-button"
           />
         </div>
       </div>

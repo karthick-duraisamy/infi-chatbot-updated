@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import MessageItem from '../MessageItem/MessageItem';
 import TypingIndicator from '../TypingIndicator/TypingIndicator';
+import './MessageList.scss';
 
 const MessageList: React.FC = () => {
   const { messages, isTyping } = useAppSelector((state) => state.chat);
@@ -17,57 +18,20 @@ const MessageList: React.FC = () => {
   }, [messages, isTyping]);
 
   return (
-    <div
-      style={{
-        flex: 1,
-        overflow: 'auto',
-        padding: '0',
-        background: isDark ? '#141414' : '#f5f5f5',
-      }}
-    >
+    <div className={`message-list message-list--${isDark ? 'dark' : 'light'}`}>
       {messages.length === 0 ? (
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '40px 20px',
-            textAlign: 'center',
-          }}
-        >
-          <div
-            style={{
-              maxWidth: '500px',
-              margin: '0 auto',
-            }}
-          >
-            <h1
-              style={{
-                fontSize: '32px',
-                fontWeight: 600,
-                color: isDark ? '#ffffff' : '#000000',
-                margin: '0 0 16px 0',
-                lineHeight: 1.2,
-              }}
-            >
+        <div className="welcome-container">
+          <div className="welcome-content">
+            <h1 className={`welcome-content__title--${isDark ? 'dark' : 'light'}`}>
               Welcome to Airline Report Assistant!
             </h1>
-            <p
-              style={{
-                fontSize: '16px',
-                color: isDark ? '#d9d9d9' : '#666666',
-                margin: 0,
-                lineHeight: 1.5,
-              }}
-            >
+            <p className={`welcome-content__description--${isDark ? 'dark' : 'light'}`}>
               Ask me about airline reports, schedules, or analytics to get started.
             </p>
           </div>
         </div>
       ) : (
-        <div style={{ padding: '20px' }}>
+        <div className="messages-container">
           {messages.map((message, index) => (
               <MessageItem 
                 key={message.id} 

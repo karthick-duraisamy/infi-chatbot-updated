@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { BulbOutlined, BulbFilled } from '@ant-design/icons';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { toggleTheme } from '../../store/themeSlice';
+import './ThemeToggle.scss';
 
 const ThemeToggle: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,12 +21,7 @@ const ThemeToggle: React.FC = () => {
         type="text"
         icon={isDark ? <BulbOutlined /> : <BulbFilled />}
         onClick={handleToggle}
-        style={{
-          color: isDark ? '#ffffff' : '#000000',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className={`theme-toggle theme-toggle--${isDark ? 'dark' : 'light'}`}
         size="large"
       />
     </Tooltip>

@@ -1,7 +1,14 @@
 
-.cls-cb-theme-toggle {
-  color: var(--conversation-color);
+.theme-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  &--light {
+    color: #000000;
+  }
+  
+  &--dark {
+    color: #ffffff;
+  }
 }

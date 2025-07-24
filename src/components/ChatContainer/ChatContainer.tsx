@@ -1,4 +1,4 @@
-  import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ConfigProvider, theme, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -8,6 +8,7 @@ import MessageList from '../MessageList/MessageList';
 import ChatInput from '../ChatInput/ChatInput';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import { useLazyGetresponse1dataQuery } from '../../services/chatService';
+import './ChatContainer.scss';
 
 const ChatContainer: React.FC = () => {
   const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
@@ -50,131 +51,47 @@ const ChatContainer: React.FC = () => {
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          background: isDark ? '#141414' : '#f5f5f5',
-        }}
-      >
+      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'}`}>
         {/* Left Sidebar */}
-        <div
-          style={{
-            width: '280px',
-            background: isDark ? '#1f1f1f' : '#ffffff',
-            borderRight: `1px solid ${isDark ? '#424242' : '#e8e8e8'}`,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '20px 16px',
-          }}
-        >
+        <div className={`sidebar sidebar--${isDark ? 'dark' : 'light'}`}>
           {/* Sidebar Header */}
-          <div style={{ marginBottom: '24px' }}>
-            <h2
-              style={{
-                margin: 0,
-                fontSize: '18px',
-                fontWeight: 600,
-                color: '#4285f4',
-                marginBottom: '20px',
-              }}
-            >
-              Airline Assistant
-            </h2>
+          <div className="sidebar-header">
+            <h2>Airline Assistant</h2>
 
             <Button
               type="primary"
               icon={<PlusOutlined />}
               block
               onClick={handleNewChat}
-              style={{
-                height: '40px',
-                borderRadius: '8px',
-                fontWeight: 500,
-                background: '#4285f4',
-                borderColor: '#4285f4',
-              }}
+              className="new-chat-button"
             >
               New Chat
             </Button>
           </div>
 
           {/* Theme Toggle at bottom */}
-          <div style={{ marginTop: 'auto' }}>
+          <div className="theme-toggle-container">
             <ThemeToggle />
           </div>
         </div>
 
         {/* Main Chat Area */}
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            background: isDark ? '#141414' : '#f5f5f5',
-          }}
-        >
+        <div className={`main-chat-area main-chat-area--${isDark ? 'dark' : 'light'}`}>
           {/* Chat Header */}
-          <div
-            style={{
-              padding: '16px 24px',
-              background: isDark ? '#1f1f1f' : '#ffffff',
-              borderBottom: `1px solid ${isDark ? '#424242' : '#e8e8e8'}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
+          <div className={`chat-header chat-header--${isDark ? 'dark' : 'light'}`}>
             <div>
-              <h3
-                style={{
-                  margin: 0,
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  color: isDark ? '#ffffff' : '#000000',
-                }}
-              >
+              <h3 className={`chat-header__title--${isDark ? 'dark' : 'light'}`}>
                 Airline Report Assistant
               </h3>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginTop: '4px',
-                }}
-              >
-                <div
-                  style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: '#52c41a',
-                    marginRight: '6px',
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: '12px',
-                    color: '#52c41a',
-                    fontWeight: 500,
-                  }}
-                >
-                  Online
-                </span>
+              <div className="status-indicator">
+                <div className="status-dot" />
+                <span className="status-text">Online</span>
               </div>
             </div>
           </div>
 
           {/* Chat Content */}
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-            }}
-          >
+          <div className="chat-content">
             <MessageList />
             <ChatInput />
           </div>
