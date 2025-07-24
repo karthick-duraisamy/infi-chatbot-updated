@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { useAppSelector } from '../hooks/useAppSelector';
 import MessageItem from './MessageItem';
@@ -69,9 +68,13 @@ const MessageList: React.FC = () => {
         </div>
       ) : (
         <div style={{ padding: '20px' }}>
-          {messages.map((message) => (
-            <MessageItem key={message.id} message={message} />
-          ))}
+          {messages.map((message, index) => (
+              <MessageItem 
+                key={message.id} 
+                message={message} 
+                isLastMessage={index === messages.length - 1}
+              />
+            ))}
           {isTyping && <TypingIndicator />}
           <div ref={messagesEndRef} />
         </div>

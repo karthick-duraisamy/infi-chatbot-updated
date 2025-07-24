@@ -222,6 +222,36 @@ body {
   }
 }
 
+/* Subtle pulse animation for last message avatars */
+@keyframes avatarPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(66, 133, 244, 0);
+  }
+}
+
+@keyframes avatarGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(245, 87, 108, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(245, 87, 108, 0.6), 0 0 30px rgba(245, 87, 108, 0.4);
+  }
+}
+
+/* Last message avatar animations */
+.last-message-avatar.user-avatar {
+  animation: avatarPulse 2s ease-in-out infinite;
+}
+
+.last-message-avatar.ai-avatar {
+  animation: avatarGlow 3s ease-in-out infinite;
+}
+
 /* Input area styling */
 .chat-textarea:focus {
   box-shadow: none !important;

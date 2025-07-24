@@ -8,9 +8,10 @@ const { Text, Paragraph } = Typography;
 
 interface MessageItemProps {
   message: Message;
+  isLastMessage?: boolean;
 }
 
-const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
+const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage = false }) => {
   const { currentUser } = useAppSelector((state) => state.chat);
   const isDark = useAppSelector((state) => state.theme.isDark);
 
@@ -93,7 +94,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
           animation: isUser ? 'avatarBounceRight 0.5s ease-out' : 'avatarBounceLeft 0.5s ease-out',
         }}
         icon={!isUser ? <RobotOutlined /> : undefined}
-        className="message-avatar"
+        className={`message-avatar ${isLastMessage ? 'last-message-avatar' : ''} ${isUser ? 'user-avatar' : 'ai-avatar'}`}
       >
         {isUser ? getUserInitials() : 'AI'}
       </Avatar>
@@ -144,7 +145,13 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
           
           {/* Render Attachments */}
           {message.attachments && message.attachments.length > 0 && (
-            <div style={{ marginTop: message.content ? '12px' : '0' }}>
+            <div style={{ 
+              marginTop: message.content ? '12px' : '0',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: isUser ? 'flex-end' : 'flex-start',
+              width: '100%'
+            }}>
               {message.attachments.map((attachment) => (
                 <div
                   key={attachment.id}
@@ -161,6 +168,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                       : `1px solid ${isDark ? '#424242' : '#d9d9d9'}`,
                     borderRadius: '8px',
                     marginBottom: '8px',
+                    maxWidth: '280px',
                   }}
                 >
                   {/* File Preview/Icon */}
