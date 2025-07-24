@@ -59,19 +59,19 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
 
   return (
     <div className={`message-item message-item--${isUser ? 'user' : 'ai'} message-item--${isDark ? 'dark' : 'light'}`}>
-      <div className={`message-content message-content--${isUser ? 'user' : 'ai'}`}>
-        <Avatar 
-          size={40} 
-          icon={isUser ? <UserOutlined /> : <RobotOutlined />}
-          className={`message-avatar message-avatar--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
-        >
-          {isUser ? 'U' : 'AI'}
-        </Avatar>
+      <Avatar 
+        size={40} 
+        icon={isUser ? <UserOutlined /> : <RobotOutlined />}
+        className={`message-avatar ${isUser ? 'user-avatar' : 'ai-avatar'}`}
+      >
+        {isUser ? 'U' : 'AI'}
+      </Avatar>
 
+      <div className={`message-content message-content--${isUser ? 'user' : 'ai'}`}>
         <div className="message-bubble-container">
           <Card 
             size="small"
-            className={`message-bubble message-bubble--${isUser ? 'user' : 'ai'} message-bubble--${isDark ? 'dark' : 'light'}`}
+            className={`message-card message-card--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
             styles={{
               body: { padding: '12px 16px' }
             }}
