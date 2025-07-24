@@ -37,7 +37,11 @@ const TypingIndicator: React.FC = () => {
             ? '0 2px 8px rgba(0, 0, 0, 0.3)'
             : '0 2px 8px rgba(0, 0, 0, 0.1)',
         }}
-        bodyStyle={{ padding: '12px 16px' }}
+        styles={{
+          body: {
+            padding: '12px 16px',
+          },
+        }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <div className="typing-dot" style={{ 
