@@ -63,7 +63,12 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
         /<\/table>/g,
         '</table></div>'
       );
-      return <div dangerouslySetInnerHTML={{ __html: wrappedContent }} />;
+      return (
+        <div 
+          className={`table-container ${isDark ? 'table-container--dark' : 'table-container--light'}`}
+          dangerouslySetInnerHTML={{ __html: wrappedContent }} 
+        />
+      );
     }
     return <div dangerouslySetInnerHTML={{ __html: content }} />;
   };
