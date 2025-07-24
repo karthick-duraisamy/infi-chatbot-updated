@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { ConfigProvider, theme, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useAppSelector } from '../hooks/useAppSelector';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { clearMessages } from '../store/chatSlice';
-import MessageList from './MessageList';
-import ChatInput from './ChatInput';
-import ThemeToggle from './ThemeToggle';
-import { useLazyGetresponse1dataQuery } from '../services/chatService';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { clearMessages } from '../../store/chatSlice';
+import MessageList from '../MessageList/MessageList';
+import ChatInput from '../ChatInput/ChatInput';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import { useLazyGetresponse1dataQuery } from '../../services/chatService';
 
 const ChatContainer: React.FC = () => {
   const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();

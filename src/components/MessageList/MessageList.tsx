@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { useAppSelector } from '../hooks/useAppSelector';
-import MessageItem from './MessageItem';
-import TypingIndicator from './TypingIndicator';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import MessageItem from '../MessageItem/MessageItem';
+import TypingIndicator from '../TypingIndicator/TypingIndicator';
 
 const MessageList: React.FC = () => {
   const { messages, isTyping } = useAppSelector((state) => state.chat);

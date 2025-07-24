@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { BulbOutlined, BulbFilled } from '@ant-design/icons';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { useAppSelector } from '../hooks/useAppSelector';
-import { toggleTheme } from '../store/themeSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { toggleTheme } from '../../store/themeSlice';
 
 const ThemeToggle: React.FC = () => {
   const dispatch = useAppDispatch();

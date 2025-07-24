@@ -1,8 +1,8 @@
 import React from 'react';
 import { Avatar, Typography, Card, Button, Tooltip, Image } from 'antd';
 import { RobotOutlined, DownloadOutlined } from '@ant-design/icons';
-import { useAppSelector } from '../hooks/useAppSelector';
-import { Message } from '../store/chatSlice';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { Message } from '../../store/chatSlice';
 
 const { Text, Paragraph } = Typography;
 

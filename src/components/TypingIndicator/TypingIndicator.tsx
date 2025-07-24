@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Card } from 'antd';
 import { RobotOutlined } from '@ant-design/icons';
-import { useAppSelector } from '../hooks/useAppSelector';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 const TypingIndicator: React.FC = () => {
   const isDark = useAppSelector((state) => state.theme.isDark);

@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Input, Button, Upload, Card, Tooltip, message as antMessage } from 'antd';
 import { SendOutlined, PaperClipOutlined, CloseOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd/es/upload';
-import { useAppDispatch } from '../hooks/useAppDispatch';
-import { useAppSelector } from '../hooks/useAppSelector';
-import { addUserMessage, sendMessageToAI } from '../store/chatSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { addUserMessage, sendMessageToAI } from '../../store/chatSlice';
 
 const { TextArea } = Input;
 
