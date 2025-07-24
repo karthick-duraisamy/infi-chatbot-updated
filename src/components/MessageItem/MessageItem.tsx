@@ -54,23 +54,12 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   };
 
   const renderContent = (content: string) => {
-    // Check if content contains a table and wrap it for responsive handling
-    if (content.includes('<table')) {
-      const wrappedContent = content.replace(
-        /<table([^>]*)>/g,
-        '<div class="table-wrapper"><table$1>'
-      ).replace(
-        /<\/table>/g,
-        '</table></div>'
-      );
-      return (
-        <div 
-          className={`table-container ${isDark ? 'table-container--dark' : 'table-container--light'}`}
-          dangerouslySetInnerHTML={{ __html: wrappedContent }} 
-        />
-      );
-    }
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    // Use a regular expression to match all <table> tags and their content
+    const tableRegex = /(<table[^>]*>[\s\S]*?<\/table>)/gi;
+    // Replace each table with the table wrapped in a div with class 'table-scroll-container'
+    const modifiedContent = content.replace(tableRegex, '<div class="table-scroll-container">$1</div>');
+
+    return <div dangerouslySetInnerHTML={{ __html: modifiedContent }} />;
   };
 
   return (

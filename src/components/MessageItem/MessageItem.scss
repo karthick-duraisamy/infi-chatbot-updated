@@ -88,7 +88,8 @@
   }
 
   &--ai {
-    max-width: 85%;
+    // max-width: 85%;
+    width: 65vw;
     align-items: flex-start;
   }
 }
@@ -149,6 +150,11 @@
     color: #ffffff;
   }
 
+  .table-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
   // Table wrapper for horizontal scroll
   .table-wrapper {
     overflow-x: auto;
@@ -204,7 +210,7 @@
     
     &:first-child {
       border-left: none;
-      position: sticky;
+      // position: sticky;
       left: 0;
       background: white;
       z-index: 2;
@@ -220,7 +226,7 @@
     font-size: 11px;
     background: #f8f9fa;
     border-bottom: 2px solid #dee2e6;
-    position: sticky;
+    // position: sticky;
     top: 0;
     z-index: 3;
     
