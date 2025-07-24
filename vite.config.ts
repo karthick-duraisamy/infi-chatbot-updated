@@ -7,4 +7,13 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        sassOptions: {
+          quietDeps: true,
+        },
+      },
+    },
+  },
 });
