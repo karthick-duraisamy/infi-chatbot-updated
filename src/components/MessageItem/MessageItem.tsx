@@ -1,29 +1,19 @@
 import React from 'react';
-import { Avatar, Typography, Card, Button, Tooltip, Image } from 'antd';
-import { RobotOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Card, Avatar, Button, Tooltip } from 'antd';
+import { UserOutlined, RobotOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { Message } from '../../store/chatSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { Message, addUserMessage, sendMessageToAI } from '../../store/chatSlice';
 import './MessageItem.scss';
-
-const { Text, Paragraph } = Typography;
 
 interface MessageItemProps {
   message: Message;
-  isLastMessage?: boolean;
 }
 
-const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage = false }) => {
-  const { currentUser } = useAppSelector((state) => state.chat);
+const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isDark = useAppSelector((state) => state.theme.isDark);
-
-  const handleFilePreview = (attachment: any) => {
-    if (attachment.preview) {
-      const imageElement = document.querySelector(`img[src="${attachment.preview}"]`) as HTMLImageElement;
-      if (imageElement) {
-        imageElement.click();
-      }
-    }
-  };
+  const dispatch = useAppDispatch();
+  const isUser = message.sender === 'user';
 
   const handleDownload = (attachment: any) => {
     if (attachment.downloadUrl) {
@@ -33,21 +23,22 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage = fals
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else if (attachment.url) {
-      window.open(attachment.url, '_blank');
     }
   };
 
-  const getFileIcon = (type: string) => {
-    if (type.startsWith('image/')) return '🖼️';
-    if (type.includes('pdf')) return '📄';
-    if (type.includes('word') || type.includes('document')) return '📝';
-    if (type.includes('excel') || type.includes('spreadsheet')) return '📊';
-    if (type.includes('text')) return '📋';
-    return '📎';
+  const handleImageClick = (attachment: any) => {
+    if (attachment.url || attachment.preview) {
+      window.open(attachment.url || attachment.preview, '_blank');
+    }
   };
 
-  const formatFileSize = (bytes: number) => {
+  const handleChoiceClick = (choiceContent: string) => {
+    // Send the choice as a new user message
+    dispatch(addUserMessage({ content: choiceContent }));
+    dispatch(sendMessageToAI({ message: choiceContent }));
+  };
+
+  const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -55,121 +46,110 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, isLastMessage = fals
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getUserInitials = () => {
-    if (currentUser.firstName && currentUser.lastName) {
-      return `${currentUser.firstName[0]}${currentUser.lastName[0]}`.toUpperCase();
-    }
-    return currentUser.username.slice(0, 2).toUpperCase();
+  const formatTime = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
   };
 
-  const isUser = message.sender === 'user';
-  const formattedTime = new Date(message.timestamp).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const renderContent = (content: string) => {
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  };
 
   return (
-    <div className={`message-item message-item--${isUser ? 'user' : 'ai'}`}>
-      <Avatar
-        size={40}
-        className={`message-avatar ${isLastMessage ? 'last-message-avatar' : ''} ${isUser ? 'user-avatar' : 'ai-avatar'}`}
-        icon={!isUser ? <RobotOutlined /> : undefined}
-      >
-        {isUser ? getUserInitials() : 'AI'}
-      </Avatar>
-
+    <div className={`message-item message-item--${isUser ? 'user' : 'ai'} message-item--${isDark ? 'dark' : 'light'}`}>
       <div className={`message-content message-content--${isUser ? 'user' : 'ai'}`}>
-        <Card
-          size="small"
-          className={`message-card message-card--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
-          styles={{
-            body: {
-              padding: '12px 16px',
-            },
-          }}
+        <Avatar 
+          size={40} 
+          icon={isUser ? <UserOutlined /> : <RobotOutlined />}
+          className={`message-avatar message-avatar--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
         >
-          <Paragraph className={`message-text message-text--${isUser ? 'user' : `ai-${isDark ? 'dark' : 'light'}`}`}>
-            {message.content}
-          </Paragraph>
+          {isUser ? 'U' : 'AI'}
+        </Avatar>
 
-          {/* Render Attachments */}
-          {message.attachments && message.attachments.length > 0 && (
-            <div className={`attachments-container attachments-container--${isUser ? 'user' : 'ai'} ${message.content ? 'attachments-container--has-content' : ''}`}>
-              {message.attachments.map((attachment) => (
-                <div
-                  key={attachment.id}
-                  className={`attachment-item attachment-item--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
-                >
-                  {/* File Preview/Icon */}
-                  {attachment.preview ? (
-                    <Image
-                      src={attachment.preview}
-                      alt={attachment.name}
-                      width={50}
-                      height={50}
-                      className="file-preview"
-                      preview={{
-                        mask: <div style={{ fontSize: '11px' }}>View</div>
-                      }}
-                    />
-                  ) : (
-                    <div
-                    className={`file-icon-container file-icon-container--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'} ${(attachment.preview || attachment.url || attachment.downloadUrl) ? 'file-icon-container--clickable' : ''}`}
-                    onClick={() => handleFilePreview(attachment)}
-                  >
-                    {getFileIcon(attachment.type)}
-                    {(attachment.preview || attachment.url || attachment.downloadUrl) && (
-                      <div className="view-overlay">
-                        View
-                      </div>
-                    )}
-                  </div>
-                  )}
+        <div className="message-bubble-container">
+          <Card 
+            size="small"
+            className={`message-bubble message-bubble--${isUser ? 'user' : 'ai'} message-bubble--${isDark ? 'dark' : 'light'}`}
+            styles={{
+              body: { padding: '12px 16px' }
+            }}
+          >
+            <div className={`message-text message-text--${isUser ? 'user' : 'ai'} message-text--${isDark ? 'dark' : 'light'}`}>
+              {renderContent(message.content)}
+            </div>
 
-                  {/* File Info */}
-                  <div 
-                    className={`file-info-container ${attachment.preview ? 'file-info-container--clickable' : ''}`}
-                    onClick={() => attachment.preview && handleFilePreview(attachment)}
+            {/* Choices/Options */}
+            {!isUser && message.choices && message.choices.length > 1 && (
+              <div className="message-choices">
+                <div className="choices-label">Choose an option:</div>
+                {message.choices.slice(1).map((choice, index) => (
+                  <Button
+                    key={index}
+                    type="default"
+                    size="small"
+                    onClick={() => handleChoiceClick(choice.message.content)}
+                    className={`choice-button choice-button--${isDark ? 'dark' : 'light'}`}
                   >
-                    <div
-                      className={`file-name file-name--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
-                      title={attachment.name}
-                    >
-                      {attachment.name}
-                    </div>
-                    <div className={`file-size file-size--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}>
-                      {formatFileSize(attachment.size)}
-                    </div>
-                    {attachment.preview && (
-                      <Tooltip title="View file">
+                    {choice.message.content}
+                  </Button>
+                ))}
+              </div>
+            )}
+
+            {/* File Attachments */}
+            {message.attachments && message.attachments.length > 0 && (
+              <div className="message-attachments">
+                {message.attachments.map((attachment) => (
+                  <div key={attachment.id} className="attachment-item">
+                    {attachment.type.startsWith('image/') ? (
+                      <div 
+                        className="attachment-image" 
+                        onClick={() => handleImageClick(attachment)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {attachment.preview && (
+                          <img 
+                            src={attachment.preview} 
+                            alt={attachment.name}
+                            style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
+                          />
+                        )}
                         <div className={`file-name-overlay file-name-overlay--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}>
                           Click to view
                         </div>
+                      </div>
+                    ) : (
+                      <div className={`attachment-file attachment-file--${isDark ? 'dark' : 'light'}`}>
+                        <div className="file-info">
+                          <div className="file-name">{attachment.name}</div>
+                          <div className="file-size">{formatFileSize(attachment.size)}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!isUser && (attachment.downloadUrl || attachment.url) && (
+                      <Tooltip title="Download file">
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<DownloadOutlined />}
+                          onClick={() => handleDownload(attachment)}
+                          className="download-btn"
+                        />
                       </Tooltip>
                     )}
                   </div>
+                ))}
+              </div>
+            )}
+          </Card>
 
-                  {/* Download Button (for AI messages) */}
-                  {!isUser && (attachment.downloadUrl || attachment.url) && (
-                    <Tooltip title="Download file">
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<DownloadOutlined />}
-                        onClick={() => handleDownload(attachment)}
-                        className="download-btn"
-                      />
-                    </Tooltip>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
-
-        <Text className={`message-time message-time--${isUser ? 'user' : 'ai'} message-time--${isDark ? 'dark' : 'light'}`}>
-          {formattedTime}
-        </Text>
+          <div className={`message-time message-time--${isUser ? 'user' : 'ai'} message-time--${isDark ? 'dark' : 'light'}`}>
+            {formatTime(message.timestamp)}
+          </div>
+        </div>
       </div>
     </div>
   );

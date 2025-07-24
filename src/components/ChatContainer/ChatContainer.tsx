@@ -7,24 +7,14 @@ import { clearMessages } from '../../store/chatSlice';
 import MessageList from '../MessageList/MessageList';
 import ChatInput from '../ChatInput/ChatInput';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
-import { useLazyGetresponse1dataQuery } from '../../services/chatService';
 import './ChatContainer.scss';
 
 const ChatContainer: React.FC = () => {
-  const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
   const dispatch = useAppDispatch();
 
   const handleNewChat = () => {
     dispatch(clearMessages());
   };
-
-  useEffect(() => {
-    getResponse();
-  }, [])
-
-  useEffect(() => {
-    console.log(getResponseStatus)
-  }, [getResponseStatus])
 
   const isDark = useAppSelector((state) => state.theme.isDark);
 

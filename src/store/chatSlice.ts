@@ -6,6 +6,14 @@ export interface Message {
   content: string;
   timestamp: number;
   isLoading?: boolean;
+  choices?: {
+    index: number;
+    message: {
+      role: string;
+      content: string;
+    };
+    finish_reason?: string;
+  }[];
   attachments?: {
     id: string;
     name: string;
@@ -44,105 +52,54 @@ const initialState: ChatState = {
   },
 };
 
-// Simulate AI response
-export const sendMessageToAI = createAsyncThunk<string, { message: string; attachments?: any[] }>(
+// Dynamic local JSON response loading
+export const sendMessageToAI = createAsyncThunk<any, { message: string; attachments?: any[] }>(
   'chat/sendMessageToAI',
   async ({ message, attachments }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
 
-    // Mock AI responses based on message content
-    let response = '';
-    const lowerMessage = message.toLowerCase();
+    // Determine which JSON file to load based on message content
+    const lowerMessage = message.toLowerCase().trim();
+    let jsonFileName = 'hello.json'; // default fallback
 
-    // Handle file attachments in response
-    if (attachments && attachments.length > 0) {
-      const fileTypes = attachments.map(att => att.type).join(', ');
-      response = `I've received your ${attachments.length} file(s) (${fileTypes}). I can analyze these files and generate reports based on their content. Here's what I can do:
-
-📊 **For Data Files (CSV, Excel):**
-• Extract and analyze booking/payment data
-• Generate custom reports with filtering
-• Create visualizations and summaries
-
-📄 **For Documents (PDF, Word):**
-• Extract relevant information
-• Summarize key points
-• Cross-reference with airline data
-
-🖼️ **For Images:**
-• Analyze charts, graphs, or screenshots
-• Extract text using OCR if needed
-
-Based on your uploaded files, I'll generate a comprehensive airline report. Would you like me to proceed with the analysis?`;
-
-      return response;
+    // Map common keywords to JSON files
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+      jsonFileName = 'hello.json';
+    } else if (lowerMessage.includes('booking') || lowerMessage.includes('flight')) {
+      jsonFileName = 'bookingdetails.json';
+    } else if (lowerMessage.includes('group') || lowerMessage.includes('request')) {
+      jsonFileName = 'GroupRequestReport.json';
+    } else if (lowerMessage.includes('last 3 months') || lowerMessage.includes('3 months')) {
+      jsonFileName = 'last3months.json';
+    } else if (lowerMessage.includes('report') || lowerMessage.includes('get report')) {
+      jsonFileName = 'getthereport.json';
     }
 
-    if (lowerMessage.includes('booking') || lowerMessage.includes('flight')) {
-      response = `I'll help you generate a booking report. Based on your request, I can include columns like: Flight Number, Passenger Name, Booking Date, Departure Time, Arrival Time, Seat Number, and Booking Status.
-
-Would you like me to:
-• Filter by specific date range?
-• Include payment information?
-• Focus on particular flight routes?
-• Show only specific booking statuses?`;
-    } else if (lowerMessage.includes('payment') || lowerMessage.includes('transaction')) {
-      response = `Perfect! I can create a comprehensive payment report for you. Available columns include: Transaction ID, Payment Method, Amount, Currency, Payment Status, Processing Date, Customer Details, and Refund Information.
-
-Here's a sample report I've generated for you:`;
-
-      // Simulate AI providing a downloadable report
-      setTimeout(() => {
-        // This would normally be handled by the API response
-        // For demo purposes, we'll add this to the message after creation
-      }, 100);
-
-      response += `
-
-Let me know if you'd like to:
-• Filter by payment method (Credit Card, Bank Transfer, etc.)
-• Set a specific date range
-• Include failed transactions
-• Show refund details`;
-
-    } else if (lowerMessage.includes('last month') || lowerMessage.includes('last 30 days')) {
-      response = `I'll generate a report for the last month. This will include data from ${new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toLocaleDateString()} to ${new Date().toLocaleDateString()}.
-
-Which type of report would you prefer:
-• Booking summary with passenger details
-• Payment transactions and revenue analysis  
-• Flight performance metrics
-• Customer analytics and demographics`;
-    } else if (lowerMessage.includes('column') || lowerMessage.includes('field')) {
-      response = `I can help you customize the columns in your report. Here are the available fields organized by category:
-
-**Booking Information:**
-• Flight Number, Route, Departure/Arrival Times
-• Passenger Name, Contact Details, Seat Assignment
-• Booking Date, Status, Confirmation Code
-
-**Payment Details:**
-• Transaction Amount, Payment Method, Status
-• Processing Date, Currency, Refund Amount
-
-**Operational Data:**
-• Aircraft Type, Gate Information, Delays
-• Crew Assignment, Fuel Consumption
-
-Which columns would you like to include?`;
-    } else {
-      response = `I understand you're looking for airline reporting assistance. I can help you with:
-
-🛫 **Booking Reports** - Passenger details, flight information, seat assignments
-💳 **Payment Analysis** - Transaction data, revenue tracking, refund processing  
-📊 **Operational Metrics** - Flight performance, delays, crew utilization
-📅 **Custom Date Ranges** - Last week, month, quarter, or specific periods
-
-Please tell me more about what specific information you'd like to analyze, and I'll create the perfect report for your needs.`;
+    try {
+      // Load the JSON file from public/staticResponse/
+      const response = await fetch(`/staticResponse/${jsonFileName}`);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${jsonFileName}`);
+      }
+      const jsonData = await response.json();
+      
+      // Return the entire JSON response object
+      return jsonData;
+    } catch (error) {
+      console.error('Error loading JSON response:', error);
+      
+      // Fallback response if JSON loading fails
+      return {
+        id: 'error-' + Date.now(),
+        choices: [{
+          message: {
+            role: 'assistant',
+            content: `<p>I apologize, but I encountered an error loading the response for "${message}". Please try again or contact support.</p>`
+          }
+        }]
+      };
     }
-
-    return response;
   }
 );
 
@@ -178,19 +135,23 @@ const chatSlice = createSlice({
       })
       .addCase(sendMessageToAI.fulfilled, (state, action) => {
         state.isTyping = false;
+        const jsonResponse = action.payload;
+        
+        // Extract content from the JSON response
+        let content = '';
+        let choices = undefined;
+        
+        if (jsonResponse.choices && jsonResponse.choices.length > 0) {
+          content = jsonResponse.choices[0].message.content;
+          choices = jsonResponse.choices;
+        }
+        
         const aiMessage: Message = {
-          id: Date.now().toString(),
+          id: jsonResponse.id || Date.now().toString(),
           sender: 'ai',
-          content: action.payload,
+          content: content,
           timestamp: Date.now(),
-          // Simulate AI providing downloadable attachments for certain responses
-          attachments: action.payload.includes('payment report') ? [{
-            id: 'report-' + Date.now(),
-            name: 'Payment_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
-            type: 'application/pdf',
-            size: 245760,
-            downloadUrl: 'data:application/pdf;base64,JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVGl0bGUgKFBheW1lbnQgUmVwb3J0KQovQ3JlYXRvciAoQUkgQXNzaXN0YW50KQovUHJvZHVjZXIgKEFpcmxpbmUgUmVwb3J0aW5nIFN5c3RlbSkKL0NyZWF0aW9uRGF0ZSAoRDoyMDI1MDEyMzAwMDAwMFopCj4+CmVuZG9iago=',
-          }] : undefined,
+          choices: choices,
         };
         state.messages.push(aiMessage);
       })
