@@ -50,11 +50,11 @@ export const sendMessageToAI = createAsyncThunk<string, { message: string; attac
   async ({ message, attachments }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-    
+
     // Mock AI responses based on message content
     let response = '';
     const lowerMessage = message.toLowerCase();
-    
+
     // Handle file attachments in response
     if (attachments && attachments.length > 0) {
       const fileTypes = attachments.map(att => att.type).join(', ');
@@ -75,10 +75,10 @@ export const sendMessageToAI = createAsyncThunk<string, { message: string; attac
 • Extract text using OCR if needed
 
 Based on your uploaded files, I'll generate a comprehensive airline report. Would you like me to proceed with the analysis?`;
-      
+
       return response;
     }
-    
+
     if (lowerMessage.includes('booking') || lowerMessage.includes('flight')) {
       response = `I'll help you generate a booking report. Based on your request, I can include columns like: Flight Number, Passenger Name, Booking Date, Departure Time, Arrival Time, Seat Number, and Booking Status.
 
@@ -91,13 +91,13 @@ Would you like me to:
       response = `Perfect! I can create a comprehensive payment report for you. Available columns include: Transaction ID, Payment Method, Amount, Currency, Payment Status, Processing Date, Customer Details, and Refund Information.
 
 Here's a sample report I've generated for you:`;
-      
+
       // Simulate AI providing a downloadable report
       setTimeout(() => {
         // This would normally be handled by the API response
         // For demo purposes, we'll add this to the message after creation
       }, 100);
-      
+
       response += `
 
 Let me know if you'd like to:
@@ -105,7 +105,7 @@ Let me know if you'd like to:
 • Set a specific date range
 • Include failed transactions
 • Show refund details`;
-      
+
     } else if (lowerMessage.includes('last month') || lowerMessage.includes('last 30 days')) {
       response = `I'll generate a report for the last month. This will include data from ${new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toLocaleDateString()} to ${new Date().toLocaleDateString()}.
 
@@ -141,7 +141,7 @@ Which columns would you like to include?`;
 
 Please tell me more about what specific information you'd like to analyze, and I'll create the perfect report for your needs.`;
     }
-    
+
     return response;
   }
 );
@@ -162,6 +162,13 @@ const chatSlice = createSlice({
     },
     updateUser: (state, action: PayloadAction<Partial<ChatState['currentUser']>>) => {
       state.currentUser = { ...state.currentUser, ...action.payload };
+    },
+    setTyping: (state, action: PayloadAction<boolean>) => {
+      state.isTyping = action.payload;
+    },
+    clearMessages: (state) => {
+      state.messages = [];
+      state.isTyping = false;
     },
   },
   extraReducers: (builder) => {
@@ -200,5 +207,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { addUserMessage, updateUser } = chatSlice.actions;
+export const { addUserMessage, setTyping, clearMessages } = chatSlice.actions;
 export default chatSlice.reducer;

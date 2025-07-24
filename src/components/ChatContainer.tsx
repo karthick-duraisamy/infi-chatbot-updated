@@ -1,8 +1,9 @@
-
 import React, { useEffect } from 'react';
 import { ConfigProvider, theme, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../hooks/useAppSelector';
+import { useAppDispatch } from '../hooks/useAppDispatch';
+import { clearMessages } from '../store/chatSlice';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import ThemeToggle from './ThemeToggle';
@@ -10,6 +11,11 @@ import { useLazyGetresponse1dataQuery } from '../services/chatService';
 
 const ChatContainer: React.FC = () => {
   const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
+  const dispatch = useAppDispatch();
+
+  const handleNewChat = () => {
+    dispatch(clearMessages());
+  };
 
   useEffect(() => {
     getResponse();
@@ -76,11 +82,12 @@ const ChatContainer: React.FC = () => {
             >
               Airline Assistant
             </h2>
-            
+
             <Button
               type="primary"
               icon={<PlusOutlined />}
               block
+              onClick={handleNewChat}
               style={{
                 height: '40px',
                 borderRadius: '8px',

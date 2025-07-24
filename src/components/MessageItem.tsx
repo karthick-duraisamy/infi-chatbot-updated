@@ -14,6 +14,16 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const { currentUser } = useAppSelector((state) => state.chat);
   const isDark = useAppSelector((state) => state.theme.isDark);
 
+  const handleFilePreview = (attachment: any) => {
+    if (attachment.preview) {
+      // Trigger the same preview functionality as the Image component
+      const imageElement = document.querySelector(`img[src="${attachment.preview}"]`) as HTMLImageElement;
+      if (imageElement) {
+        imageElement.click();
+      }
+    }
+  };
+
   const handleDownload = (attachment: any) => {
     if (attachment.downloadUrl) {
       // Handle base64 or blob URLs
@@ -162,7 +172,8 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                       height={50}
                       style={{ 
                         borderRadius: '6px',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        cursor: 'pointer'
                       }}
                       preview={{
                         mask: <div style={{ fontSize: '11px' }}>View</div>
@@ -182,14 +193,48 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                           : (isDark ? '#262626' : '#ffffff'),
                         borderRadius: '6px',
                         border: `1px solid ${isDark ? '#424242' : '#e1e5e9'}`,
+                        cursor: attachment.preview ? 'pointer' : 'default',
+                        position: 'relative',
                       }}
+                      className="file-icon-container"
+                      onClick={() => attachment.preview && handleFilePreview(attachment)}
                     >
                       {getFileIcon(attachment.type)}
+                      {attachment.preview && (
+                        <div 
+                          className="view-overlay"
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(0, 0, 0, 0.6)',
+                            color: 'white',
+                            display: 'none',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            borderRadius: '6px',
+                          }}
+                        >
+                          View
+                        </div>
+                      )}
                     </div>
                   )}
                   
                   {/* File Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <div 
+                    style={{ 
+                      flex: 1, 
+                      minWidth: 0,
+                      cursor: attachment.preview ? 'pointer' : 'default',
+                      position: 'relative'
+                    }}
+                    className="file-info-container"
+                    onClick={() => attachment.preview && handleFilePreview(attachment)}
+                  >
                     <div
                       style={{
                         color: isUser 
@@ -203,6 +248,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                         marginBottom: '4px',
                       }}
                       title={attachment.name}
+                      className="file-name"
                     >
                       {attachment.name}
                     </div>
@@ -216,6 +262,32 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                     >
                       {formatFileSize(attachment.size)}
                     </div>
+                    {attachment.preview && (
+                      <Tooltip title="View file">
+                        <div 
+                          className="file-name-overlay"
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: isUser 
+                              ? 'rgba(255, 255, 255, 0.1)'
+                              : (isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'),
+                            borderRadius: '4px',
+                            display: 'none',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: isDark ? '#1890ff' : '#1890ff',
+                            fontSize: '12px',
+                            fontWeight: '500',
+                          }}
+                        >
+                          Click to view
+                        </div>
+                      </Tooltip>
+                    )}
                   </div>
                   
                   {/* Download Button (for AI messages) */}

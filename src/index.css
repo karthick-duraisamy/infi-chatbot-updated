@@ -292,3 +292,20 @@ body {
   box-shadow: none !important;
   outline: none !important;
 }
+
+/* Enhanced file hover effects */
+.file-icon-container:hover .view-overlay {
+  display: flex !important;
+}
+
+.file-info-container:hover .file-name-overlay {
+  display: flex !important;
+}
+
+.file-name:hover {
+  color: #1890ff !important;
+}
+
+.ant-theme-dark .file-name:hover {
+  color: #40a9ff !important;
+}
