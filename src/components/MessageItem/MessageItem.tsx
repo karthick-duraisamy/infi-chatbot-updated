@@ -65,7 +65,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
       );
       return (
         <div 
-          className={`table-container ${isDark ? 'table-container--dark' : 'table-container--light'}`}
+          className="table-content"
           dangerouslySetInnerHTML={{ __html: wrappedContent }} 
         />
       );
