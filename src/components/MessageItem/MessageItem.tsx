@@ -66,11 +66,6 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
       return (
         <div 
           className="table-content"
-          style={{ 
-            width: '100%', 
-            overflow: 'hidden',
-            maxWidth: '100%'
-          }}
           dangerouslySetInnerHTML={{ __html: wrappedContent }} 
         />
       );
