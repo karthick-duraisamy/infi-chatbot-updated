@@ -154,25 +154,26 @@
     overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
-    max-width: 100%;
+    max-width: calc(100vw - 120px);
     margin: 12px 0;
     border: 1px solid #e1e5e9;
     border-radius: 8px;
     background: white;
     position: relative;
+    contain: layout style;
     
     &::-webkit-scrollbar {
-      height: 6px;
+      height: 8px;
     }
     
     &::-webkit-scrollbar-track {
       background: #f8f9fa;
-      border-radius: 3px;
+      border-radius: 4px;
     }
     
     &::-webkit-scrollbar-thumb {
       background: #dee2e6;
-      border-radius: 3px;
+      border-radius: 4px;
       
       &:hover {
         background: #adb5bd;
@@ -182,29 +183,34 @@
 
   // Table styling for HTML content
   table {
-    width: max-content;
+    width: auto;
     min-width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     margin: 0;
     font-size: 12px;
     background: white;
-    table-layout: auto;
+    table-layout: fixed;
     display: table;
   }
 
   th, td {
-    padding: 10px 14px;
+    padding: 8px 12px;
     text-align: left;
     border-bottom: 1px solid #e1e5e9;
     border-right: 1px solid #e1e5e9;
     white-space: nowrap;
-    min-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: auto;
+    min-width: 100px;
+    max-width: 200px;
     vertical-align: middle;
     font-size: 12px;
     
     &:first-child {
       border-left: 1px solid #e1e5e9;
+      min-width: 120px;
     }
     
     &:last-child {
@@ -234,6 +240,13 @@
     &:last-child td {
       border-bottom: 1px solid #e1e5e9;
     }
+  }
+
+  // Table content wrapper
+  .table-content {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
   }
 
   // Dark theme table styling
@@ -288,19 +301,35 @@
     .table-wrapper {
       margin: 8px 0;
       border-radius: 6px;
+      max-width: calc(100vw - 80px);
     }
     
     table {
       font-size: 11px;
+      table-layout: auto;
     }
     
     th, td {
-      padding: 8px 10px;
-      min-width: 100px;
+      padding: 6px 8px;
+      min-width: 80px;
+      max-width: 150px;
       font-size: 11px;
     }
     
     th {
+      font-size: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .table-wrapper {
+      max-width: calc(100vw - 60px);
+    }
+    
+    th, td {
+      padding: 4px 6px;
+      min-width: 60px;
+      max-width: 120px;
       font-size: 10px;
     }
   }
