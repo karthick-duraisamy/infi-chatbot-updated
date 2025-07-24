@@ -6,7 +6,7 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import ThemeToggle from './ThemeToggle';
-import { useLazyGetresponse1dataQuery } from '../services/service';
+import { useLazyGetresponse1dataQuery } from '../services/chatService';
 
 const ChatContainer: React.FC = () => {
   const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
