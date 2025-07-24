@@ -4,10 +4,21 @@ import { useAppSelector } from '../hooks/useAppSelector';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import ThemeToggle from './ThemeToggle';
+import { useLazyGetresponse1dataQuery } from '../services/chatService';
 
 const { Content, Header } = Layout;
 
 const ChatContainer: React.FC = () => {
+  const [getResponse, getResponseStatus] = useLazyGetresponse1dataQuery();
+
+  useEffect(() => {
+    getResponse();
+  }, [])
+
+  useEffect(() => {
+    console.log(getResponseStatus)
+  }, [getResponseStatus])
+
   const isDark = useAppSelector((state) => state.theme.isDark);
 
   useEffect(() => {

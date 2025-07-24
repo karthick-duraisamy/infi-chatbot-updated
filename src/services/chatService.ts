@@ -5,15 +5,15 @@ const service = ChatBotSerice.enhanceEndpoints({
   addTagTypes: ["grmConfig"]
 }).injectEndpoints({
   endpoints: (builder) => ({
-    getAirlineConfig: builder.query<any, void>({
+    getresponse1data: builder.query<any, void>({
       query: () => ({
         method: "GET",
-        url: `/`
+        url: `staticResponse/response1.json`
       })
     })
   })
 });
 
 export const {
-  useGetAirlineConfigQuery,
+  useLazyGetresponse1dataQuery,
 } = service;
