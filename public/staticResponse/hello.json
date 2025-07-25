@@ -9,7 +9,7 @@
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "<p>Hello! </p>"
+        "content": "<p>Hello! I'm your group booking assistant. I can help you with group booking reports. What information are you looking for?</p>"
       },
       "finish_reason": "stop"
     }
