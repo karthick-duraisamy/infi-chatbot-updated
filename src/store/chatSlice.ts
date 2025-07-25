@@ -52,10 +52,10 @@ const initialState: ChatState = {
   },
 };
 
-// Dynamic local JSON response loading
+// Dynamic local JSON response loading using Redux Toolkit Query
 export const sendMessageToAI = createAsyncThunk<any, { message: string; attachments?: any[] }>(
   'chat/sendMessageToAI',
-  async ({ message, attachments }) => {
+  async ({ message, attachments }, { dispatch, extra }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
 
@@ -77,15 +77,16 @@ export const sendMessageToAI = createAsyncThunk<any, { message: string; attachme
     }
 
     try {
-      // Load the JSON file from public/staticResponse/
-      const response = await fetch(`/staticResponse/${jsonFileName}`);
-      if (!response.ok) {
-        throw new Error(`Failed to load ${jsonFileName}`);
-      }
-      const jsonData = await response.json();
+      // Import the service endpoints
+      const { ChatBotSerice } = await import('../services/service');
+      
+      // Use the service's endpoints directly to fetch the JSON file
+      const result = await dispatch(
+        ChatBotSerice.endpoints.getresponse1data.initiate(jsonFileName)
+      ).unwrap();
       
       // Return the entire JSON response object
-      return jsonData;
+      return result;
     } catch (error) {
       console.error('Error loading JSON response:', error);
       

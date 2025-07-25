@@ -5,10 +5,10 @@ const service = ChatBotSerice.enhanceEndpoints({
   addTagTypes: ["grmConfig"]
 }).injectEndpoints({
   endpoints: (builder) => ({
-    getresponse1data: builder.query<any, void>({
-      query: () => ({
+    getresponse1data: builder.query<any, string>({
+      query: (fileName) => ({
         method: "GET",
-        url: `staticResponse/response1.json`
+        url: `staticResponse/${fileName}`
       })
     }),
     getChatResponse: builder.mutation<any, any>({
