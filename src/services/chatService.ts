@@ -14,7 +14,7 @@ const service = ChatBotSerice.enhanceEndpoints({
     getChatResponse: builder.mutation<any, any>({
       query: (requestInfo) => ({
         method: "POST",
-        url: `/airlines/configuration`,
+        url: `/chat/completions`,
         body: requestInfo
       })
     }),

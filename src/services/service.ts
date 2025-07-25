@@ -6,7 +6,7 @@ const apiUrl = `${window.location.origin}/grmadmin/admin`;
 const ChatBotSerice = createApi({
   reducerPath: "GRMConfig",
   baseQuery: fetchBaseQuery({
-    baseUrl: '/',
+    baseUrl: 'http://localhost:8002/v1',
     prepareHeaders: (headers, { endpoint }) => {
       const token = localStorage.getItem('authToken');
       if (token) {

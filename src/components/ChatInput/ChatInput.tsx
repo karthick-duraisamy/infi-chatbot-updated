@@ -120,7 +120,8 @@ const ChatInput: React.FC = () => {
       // getChatResponse(encryptRequest(requestData));
       dispatch(sendMessageToAI({ 
         message: trimmedMessage || 'Please analyze these files', 
-        attachments: attachments.length > 0 ? attachments : undefined 
+        attachments: attachments.length > 0 ? attachments : undefined,
+        requestData: requestData
       }));
     }
   };
