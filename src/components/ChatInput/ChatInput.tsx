@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { addUserMessage, sendMessageToAI } from '../../store/chatSlice';
 import './ChatInput.scss';
+import { useGetChatResponseMutation } from '../../services/chatService';
 
 const { TextArea } = Input;
 
@@ -17,6 +18,7 @@ const ChatInput: React.FC = () => {
   const isDark = useAppSelector((state) => state.theme.isDark);
   const textAreaRef = useRef<any>(null);
   const uploadRef = useRef<any>(null);
+  const [getChatResponse, getChatResponseStatus] = useGetChatResponseMutation();
 
   useEffect(() => {
     textAreaRef.current?.focus();
@@ -109,6 +111,13 @@ const ChatInput: React.FC = () => {
       }));
       setMessage('');
       setFileList([]);
+      let requestData = {
+        "agent": "reportAgent",
+        "messages": [
+          { "role": "user", "content": trimmedMessage }
+        ]
+      };
+      // getChatResponse(encryptRequest(requestData));
       dispatch(sendMessageToAI({ 
         message: trimmedMessage || 'Please analyze these files', 
         attachments: attachments.length > 0 ? attachments : undefined 

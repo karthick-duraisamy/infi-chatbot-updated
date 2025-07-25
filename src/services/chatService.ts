@@ -10,10 +10,18 @@ const service = ChatBotSerice.enhanceEndpoints({
         method: "GET",
         url: `staticResponse/response1.json`
       })
-    })
+    }),
+    getChatResponse: builder.mutation<any, any>({
+      query: (requestInfo) => ({
+        method: "POST",
+        url: `/airlines/configuration`,
+        body: requestInfo
+      })
+    }),
   })
 });
 
 export const {
   useLazyGetresponse1dataQuery,
+  useGetChatResponseMutation
 } = service;
