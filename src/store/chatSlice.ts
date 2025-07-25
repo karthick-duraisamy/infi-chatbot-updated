@@ -56,9 +56,6 @@ const initialState: ChatState = {
 export const sendMessageToAI = createAsyncThunk<any, { message: string; attachments?: any[], requestData?: any }>(
   'chat/sendMessageToAI',
   async ({ message, attachments, requestData }, { dispatch, extra }) => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-
     // Determine which JSON file to load based on message content
     const lowerMessage = message.toLowerCase().trim();
     let jsonFileName = 'hello.json'; // default fallback
