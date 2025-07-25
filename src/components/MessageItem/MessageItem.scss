@@ -76,6 +76,7 @@
 }
 
 .message-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -87,12 +88,13 @@
   }
 
   &--ai {
-    max-width: 85%;
+    width: 65vw;
     align-items: flex-start;
   }
 }
 
 .message-bubble-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -101,8 +103,8 @@
 .message-card {
   border-radius: 16px;
   margin-bottom: 4px;
-  width: fit-content;
-  min-width: 120px;
+  // width: fit-content;
+  // min-width: 120px;
 
   &--user-light {
     background: #1890ff;
