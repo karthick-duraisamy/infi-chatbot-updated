@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
+export interface User {
+  firstName: string;
+  lastName?: string;
+  email?: string;
+}
+
 export interface Message {
   id: string;
   sender: 'user' | 'ai';
@@ -25,14 +31,10 @@ export interface Message {
   }[];
 }
 
-export interface ChatState {
+interface ChatState {
   messages: Message[];
   isTyping: boolean;
-  currentUser: {
-    firstName: string;
-    lastName: string;
-    username: string;
-  };
+  currentUser: User;
 }
 
 const initialState: ChatState = {
@@ -76,17 +78,17 @@ export const sendMessageToAI = createAsyncThunk<any, { message: string; attachme
     try {
       // Import the service endpoints
       const { ChatBotSerice } = await import('../services/service');
-      
+
       // Use the service's endpoints directly to fetch the JSON file
       const result = await dispatch(
         (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(requestData)
       ).unwrap();
-      
+
       // Return the entire JSON response object
       return result;
     } catch (error) {
       console.error('Error loading JSON response:', error);
-      
+
       // Fallback response if JSON loading fails
       return {
         id: 'error-' + Date.now(),
@@ -134,16 +136,16 @@ const chatSlice = createSlice({
       .addCase(sendMessageToAI.fulfilled, (state, action) => {
         state.isTyping = false;
         const jsonResponse = action.payload;
-        
+
         // Extract content from the JSON response
         let content = '';
         let choices = undefined;
-        
+
         if (jsonResponse.choices && jsonResponse.choices.length > 0) {
           content = jsonResponse.choices[0].message.content;
           choices = jsonResponse.choices;
         }
-        
+
         const aiMessage: Message = {
           id: jsonResponse.id || Date.now().toString(),
           sender: 'ai',

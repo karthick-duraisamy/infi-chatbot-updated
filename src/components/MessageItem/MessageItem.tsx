@@ -14,6 +14,22 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isDark = useAppSelector((state) => state.theme.isDark);
   const dispatch = useAppDispatch();
   const isUser = message.sender === 'user';
+  const currentUser = useAppSelector((state) => state.chat.currentUser);
+
+  const generateUserAvatar = () => {
+    if (!currentUser?.firstName) return 'U';
+    
+    const firstName = currentUser.firstName.trim();
+    const lastName = currentUser.lastName?.trim();
+    
+    if (lastName) {
+      return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+    } else if (firstName.length >= 2) {
+      return firstName.substring(0, 2).toUpperCase();
+    } else {
+      return firstName.charAt(0).toUpperCase();
+    }
+  };
 
   const handleDownload = (attachment: any) => {
     if (attachment.downloadUrl) {
@@ -66,10 +82,10 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     <div className={`message-item message-item--${isUser ? 'user' : 'ai'} message-item--${isDark ? 'dark' : 'light'}`}>
       <Avatar 
         size={40} 
-        icon={isUser ? <UserOutlined /> : <RobotOutlined />}
+        icon={!isUser ? <RobotOutlined /> : undefined}
         className={`message-avatar ${isUser ? 'user-avatar' : 'ai-avatar'}`}
       >
-        {isUser ? 'U' : 'AI'}
+        {isUser ? generateUserAvatar() : 'AI'}
       </Avatar>
 
       <div className={`message-content message-content--${isUser ? 'user' : 'ai'}`}>
