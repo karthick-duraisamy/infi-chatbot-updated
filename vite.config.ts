@@ -1,39 +1,45 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  define: {
-    'process.env.NODE_ENV': JSON.stringify('production'),
-  },
-  build: {
-    lib: {
-      entry: 'src/main.tsx',
-      name: 'ReactMF',
-      fileName: () => 'chatBot.js',
-      formats: ['umd'],
+export default defineConfig(({ command, mode }) => {
+  const isBuild = command === 'build';
+
+  return {
+    plugins: [react()],
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(mode),
     },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
+    build: isBuild
+      ? {
+          lib: {
+            entry: path.resolve(__dirname, 'src/main.tsx'),
+            name: 'ReactMF',
+            fileName: () => 'chatbot.js',
+            formats: ['umd'],
+          },
+          rollupOptions: {
+            external: ['react', 'react-dom'],
+            output: {
+              globals: {
+                react: 'React',
+                'react-dom': 'ReactDOM',
+              },
+            },
+          },
+        }
+      : {},
+    optimizeDeps: {
+      exclude: ['lucide-react'],
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          sassOptions: {
+            quietDeps: true,
+          },
         },
       },
     },
-  },
-  optimizeDeps: {
-    exclude: ["lucide-react"],
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        sassOptions: {
-          quietDeps: true,
-        },
-      },
-    },
-  },
+  };
 });

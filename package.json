@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config vite.config.ts",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -13,17 +13,19 @@
     "@ant-design/icons": "^6.0.0",
     "@reduxjs/toolkit": "^2.8.2",
     "antd": "^5.26.6",
+    "crypto-js": "^4.2.0",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
+    "react-to-webcomponent": "^2.0.1",
     "sass": "^1.89.2",
-    "sass-embedded": "^1.89.2",
-    "crypto-js": "^4.2.0"
+    "sass-embedded": "^1.89.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/crypto-js": "^4.2.2",
+    "@types/node": "^24.1.0",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
