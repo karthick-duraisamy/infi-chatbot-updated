@@ -1,12 +1,11 @@
-
 .chat-input {
   padding: 20px 24px 24px 24px;
   border-top: none;
-  
+
   &--light {
     background: #f5f5f5;
   }
-  
+
   &--dark {
     background: #141414;
   }
@@ -22,12 +21,12 @@
   overflow-y: auto;
   padding: 8px 12px;
   border-radius: 8px;
-  
+
   &--light {
     background: #f7f7f8;
     border: 1px solid #e3e3e3;
   }
-  
+
   &--dark {
     background: #2f2f2f;
     border: 1px solid #4a4a4a;
@@ -39,12 +38,12 @@
   position: relative;
   border-radius: 6px;
   overflow: hidden;
-  
+
   &--light {
     background: #ffffff;
     border: 1px solid #e3e3e3;
   }
-  
+
   &--dark {
     background: #404040;
     border: 1px solid #555555;
@@ -60,10 +59,10 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     opacity: 0.8;
-    
+
     .cls-cb-image-overlay {
       opacity: 1;
     }
@@ -107,7 +106,7 @@
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  
+
   &:hover {
     color: #ff6b6b;
   }
@@ -119,22 +118,22 @@
   height: 64px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   &--light {
     background: #ffffff;
     border: 1px solid #e3e3e3;
   }
-  
+
   &--dark {
     background: #404040;
     border: 1px solid #555555;
   }
-  
+
   .ant-card-body {
     padding: 8px !important;
     height: 100%;
@@ -149,23 +148,23 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  
+
   .cls-cb-file-info {
     display: flex;
     align-items: center;
     min-width: 0;
     flex: 1;
-    
+
     .cls-cb-file-icon {
       margin-right: 6px;
       font-size: 14px;
       flex-shrink: 0;
     }
-    
+
     .cls-cb-file-details {
       min-width: 0;
       flex: 1;
-      
+
       .cls-cb-file-name {
         font-size: 11px;
         font-weight: 500;
@@ -174,23 +173,23 @@
         white-space: nowrap;
         line-height: 1.2;
         margin-bottom: 2px;
-        
+
         &--light {
           color: #1a1a1a;
         }
-        
+
         &--dark {
           color: #e8e8e8;
         }
       }
-      
+
       .cls-cb-file-size {
         font-size: 9px;
-        
+
         &--light {
           color: #737373;
         }
-        
+
         &--dark {
           color: #a3a3a3;
         }
@@ -209,21 +208,21 @@
   border: none;
   font-size: 10px;
   flex-shrink: 0;
-  
+
   &--light {
     color: #737373;
     background: transparent;
-    
+
     &:hover {
       color: #ef4444;
       background: #fef2f2;
     }
   }
-  
+
   &--dark {
     color: #a3a3a3;
     background: transparent;
-    
+
     &:hover {
       color: #f87171;
       background: #2d1b20;
@@ -244,12 +243,12 @@
   border-radius: 24px;
   padding: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  
+
   &--light {
     background: #ffffff;
     border-color: #d9d9d9;
   }
-  
+
   &--dark {
     background: #262626;
     border-color: #424242;
@@ -266,11 +265,11 @@
   justify-content: center;
   font-size: 16px;
   margin: 0 4px;
-  
+
   &--light {
     color: #666666;
   }
-  
+
   &--dark {
     color: #d9d9d9;
   }
@@ -283,11 +282,13 @@
   font-size: 14px;
   line-height: 20px;
   background: transparent;
-  
+  font-family: var(--font-regular);
+  font-weight: var(--weight-regular);
+
   &--light {
     color: #000000;
   }
-  
+
   &--dark {
     color: #ffffff;
   }
@@ -303,7 +304,9 @@
   margin-left: 4px;
   background: #4285f4;
   border-color: #4285f4;
-  
+  font-family: var(--font-semibold);
+  font-weight: var(--weight-semibold);
+
   &:disabled {
     opacity: 0.5;
   }

@@ -7,7 +7,31 @@
 .chat-container {
   height: 100vh;
   display: flex;
-  font-family: inherit;
+  font-direction: column;
+  background: var(--background);
+
+  .chat-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--menu-border);
+    background: var(--background);
+
+    .header-title {
+      margin: 0;
+      font-family: var(--font-title);
+      font-size: var(--title-size);
+      font-weight: var(--weight-bold);
+      color: var(--text-color);
+    }
+
+    .header-subtitle {
+      margin: 4px 0 0 0;
+      font-family: var(--font-regular);
+      font-size: var(--subtitle-size);
+      font-weight: var(--weight-regular);
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+  }
 
   &--light {
     background: #f5f5f5;
