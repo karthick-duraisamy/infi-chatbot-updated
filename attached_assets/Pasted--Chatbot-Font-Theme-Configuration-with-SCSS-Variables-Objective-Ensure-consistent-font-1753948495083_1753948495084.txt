@@ -1,0 +1,104 @@
+# 🧩 Chatbot Font & Theme Configuration with SCSS Variables
+
+## 🎯 Objective
+
+Ensure consistent font styling across all chatbot UI components — including:
+- Header titles (e.g., "Airline Assistant")
+- Subheaders (e.g., "Airline Report Assistant")
+- "New chat" button
+- AI/user messages
+
+## 🛠️ Why SCSS Variables?
+
+To support **multi-airline theming** (~20 clients), we use SCSS variables in a central `theme.scss` file. This allows dynamic branding (fonts, colors) with minimal code changes per airline.
+
+---
+
+## 🧬 SCSS Theme Variables: `theme.scss`
+
+```scss
+body {
+  --font-regular: 'OpenSansRegular';
+  --font-semibold: 'OpenSansSemiBold';
+  --font-bold: 'OpenSansBold';
+  --font-title: 'OpenSansRegular';
+
+  --title-size: 24px;
+  --subtitle-size: 16px;
+}
+
+body.light {
+  --menuColor: #cdddf5;
+  --ant-primary-color: #fd9646;
+  --menu-border: rgba(5, 5, 5, 0.06);
+  --menu-border-bottom: rgba(5, 5, 5, 0.1);
+}
+
+body.dark {
+  --ant-primary-color: #fd9646;
+  --menuColor: #cdddf5;
+  --background: #181a1b;
+}
+```
+
+---
+
+## 📁 File Structure Suggestion
+
+```
+src/
+├── assets/
+│   └── styles/
+│       └── theme.scss  <-- centralized SCSS variables
+├── components/
+│   └── Chatbot/
+│       └── Chatbox.scss
+```
+
+---
+
+## ✍️ How to Apply Font Globally (Chatbot)
+
+### ✅ In `Chatbox.scss` or global chatbot SCSS file:
+
+```scss
+.chatbot-header,
+.chatbot-subheader {
+  font-family: var(--font-title);
+}
+
+.chat-message,
+.user-message {
+  font-family: var(--font-regular);
+}
+
+.new-chat-button {
+  font-family: var(--font-semibold);
+}
+```
+
+---
+
+## 🌐 Result
+
+This structure ensures:
+- Fonts and colors are **theme-driven**
+- Switching airline themes = only update `theme.scss`
+- No need to edit multiple component files
+
+---
+
+## 🔁 Usage Example (Dynamic Airline Theme Switch)
+
+```ts
+document.body.classList.add("airline-jetblue"); // Airline-specific theme
+
+// In SCSS:
+body.airline-jetblue {
+  --font-title: 'Poppins';
+  --font-regular: 'Poppins';
+  --ant-primary-color: #2196f3;
+}
+```
+
+> This makes your chatbot **scalable, brand-consistent, and maintainable** for multiple airline clients.
