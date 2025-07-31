@@ -1,0 +1,80 @@
+# Responsive Design Requirements for Chatbot App
+
+## Overview
+This document outlines the responsive UI behavior for the "Airline Report Assistant" chatbot application, ensuring a seamless experience across device widths ranging from **320px to 1500px**.
+
+---
+
+## 1. General Responsive Range
+- The layout must be responsive from **320px to 1500px** width.
+- Use **flexbox** and **CSS media queries** to handle layout transitions.
+
+---
+
+## 2. Behavior When Width < 576px
+- When screen width is **below 576px**:
+  - The **'Airline Assistant'** title/component needs to be repositioned to adapt to a **modern compact layout** (reference: **ChatGPT mobile design**).
+  - The title can move to the **top center** or be merged into a header bar, providing clarity and conserving space.
+  - The **"New Chat"** button should be placed on the **right side** of the conversation header beside the "Airline Report Assistant".
+
+---
+
+## 3. Behavior When Width < 320px
+- If the device width is **below 320px**:
+  - Move the **"New Chat"** button into the **conversation header**, placed on the **right side**.
+
+### Functional Behavior for All Small Screens:
+- When the **New Chat** button is clicked:
+  - It must **clear the existing conversation** or behave like the existing "clear chat" functionality.
+  - Make sure the button is clearly visible and accessible.
+
+### Sticky Header and Footer:
+- When the user scrolls the conversation area on small devices (from **320px to 575px** and below):
+  - The **header (Airline Report Assistant)** and the **footer (input/send area)** should remain **fixed**, similar to **WhatsApp chat UI**.
+
+---
+
+## 4. Configurable Display Mode via config.json
+- Located at: `src/config/config.json`
+- Key: `displayView`
+
+### Behavior:
+- If `displayView = "full"`:
+  - The interface should work as it currently does (default fullscreen chat interface).
+- If `displayView = "half"`:
+  - The **chatbot icon** should appear in the **bottom right corner**.
+  - When the **user clicks** the chatbot icon:
+    - A chat interface like the one shown in the **attached screenshots** should be opened.
+    - It should mimic a **slide-up panel or modal-style interface** embedded in the current screen.
+
+---
+
+## 5. Design References
+- Follow the design system similar to **ChatGPT** and **WhatsApp**:
+  - Responsive behavior
+  - Sticky headers and footers for scrollable content
+  - Mobile-first optimizations
+  - Clear spacing and accessibility
+
+---
+
+## 6. Accessibility
+- Ensure that all elements are accessible via keyboard and screen readers.
+- Maintain touch-friendly spacing for small devices.
+
+---
+
+## 7. Technology Stack
+- React
+- Ant Design (antd) components for structure
+
+---
+
+## 8. Final Notes
+- Test responsiveness across real devices and emulators.
+- Pay attention to performance on small devices.
+- Ensure consistent font scaling and padding.
+
+---
+
+End of Document.
