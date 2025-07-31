@@ -72,6 +72,13 @@ const ChatContainer: React.FC = () => {
                   Airline Report Assistant
                 </h3>
               </div>
+              <button 
+                className="mobile-new-chat-btn"
+                onClick={handleNewChat}
+                aria-label="Start new chat"
+              >
+                New Chat
+              </button>
             </div>
           )}
           <div className="chat-content">
