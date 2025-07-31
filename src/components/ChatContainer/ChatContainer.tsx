@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
-import { ConfigProvider, theme, Button } from 'antd';
+import React, { useCallback } from 'react';
+import { ConfigProvider, theme as antTheme, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { clearMessages } from '../../store/chatSlice';
+import { useHeightCommunication } from '../../hooks/useHeightCommunication';
+import { getEmbeddingConfig, applyEmbeddingStyles } from '../../utils/embeddingUtils';
 import MessageList from '../MessageList/MessageList';
 import ChatInput from '../ChatInput/ChatInput';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
@@ -11,22 +13,23 @@ import './ChatContainer.scss';
 
 const ChatContainer: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { isDark } = useAppSelector((state) => state.theme);
+  const embeddingConfig = getEmbeddingConfig();
 
-  const handleNewChat = () => {
+  // Enable height communication with parent window
+  useHeightCommunication();
+
+  // Apply embedding styles
+  React.useEffect(() => {
+    applyEmbeddingStyles(embeddingConfig);
+  }, [embeddingConfig]);
+
+  const handleNewChat = useCallback(() => {
     dispatch(clearMessages());
-  };
-
-  const isDark = useAppSelector((state) => state.theme.isDark);
-
-  useEffect(() => {
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.height = '100vh';
-    document.body.style.overflow = 'hidden';
-  }, []);
+  }, [dispatch]);
 
   const themeConfig = {
-    algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
     token: {
       colorPrimary: '#1890ff',
       borderRadius: 8,
@@ -41,42 +44,36 @@ const ChatContainer: React.FC = () => {
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'}`}>
-        {/* Left Sidebar */}
-        <div className={`sidebar sidebar--${isDark ? 'dark' : 'light'}`}>
-          {/* Sidebar Header */}
-          <div className="sidebar-header">
-            <h2>Airline Assistant</h2>
-
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              block
-              onClick={handleNewChat}
-              className="new-chat-button"
-            >
-              New Chat
-            </Button>
-          </div>
-
-          {/* Theme Toggle at bottom */}
-          <div className="theme-toggle-container">
-            <ThemeToggle />
-          </div>
-        </div>
-
-        {/* Main Chat Area */}
-        <div className={`main-chat-area main-chat-area--${isDark ? 'dark' : 'light'}`}>
-          {/* Chat Header */}
-          <div className={`chat-header chat-header--${isDark ? 'dark' : 'light'}`}>
-            <div>
-              <h3 className={`chat-header__title--${isDark ? 'dark' : 'light'}`}>
-                Airline Report Assistant
-              </h3>
+      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'} ${embeddingConfig.isEmbedded ? 'embedded' : ''}`}>
+        {!embeddingConfig.hideSidebar && (
+          <div className={`sidebar sidebar--${isDark ? 'dark' : 'light'}`}>
+            <div className="sidebar-header">
+              <h2>Airline Assistant</h2>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                block
+                onClick={handleNewChat}
+                className="new-chat-button"
+              >
+                New Chat
+              </Button>
+            </div>
+            <div className="theme-toggle-container">
+              <ThemeToggle />
             </div>
           </div>
-
-          {/* Chat Content */}
+        )}
+        <div className={`main-chat-area main-chat-area--${isDark ? 'dark' : 'light'} ${embeddingConfig.hideSidebar ? 'full-width' : ''}`}>
+          {!embeddingConfig.hideHeader && (
+            <div className={`chat-header chat-header--${isDark ? 'dark' : 'light'}`}>
+              <div>
+                <h3 className={`chat-header__title--${isDark ? 'dark' : 'light'}`}>
+                  Airline Report Assistant
+                </h3>
+              </div>
+            </div>
+          )}
           <div className="chat-content">
             <MessageList />
             <ChatInput />
