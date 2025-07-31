@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { ConfigProvider, theme as antTheme, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, MessageOutlined, CloseOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { clearMessages } from '../../store/chatSlice';
@@ -9,12 +9,15 @@ import { getEmbeddingConfig, applyEmbeddingStyles } from '../../utils/embeddingU
 import MessageList from '../MessageList/MessageList';
 import ChatInput from '../ChatInput/ChatInput';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import config from '../../config/config.json';
 import './ChatContainer.scss';
 
 const ChatContainer: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isDark } = useAppSelector((state) => state.theme);
   const embeddingConfig = getEmbeddingConfig();
+  const [isHalfScreenOpen, setIsHalfScreenOpen] = useState(false);
+  const isHalfScreenMode = config.displayView === 'half';
 
   // Enable height communication with parent window
   useHeightCommunication();
@@ -27,6 +30,14 @@ const ChatContainer: React.FC = () => {
   const handleNewChat = useCallback(() => {
     dispatch(clearMessages());
   }, [dispatch]);
+
+  const toggleHalfScreen = useCallback(() => {
+    setIsHalfScreenOpen(!isHalfScreenOpen);
+  }, [isHalfScreenOpen]);
+
+  const closeHalfScreen = useCallback(() => {
+    setIsHalfScreenOpen(false);
+  }, []);
 
   const themeConfig = {
     algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
@@ -42,10 +53,25 @@ const ChatContainer: React.FC = () => {
     },
   };
 
+  // Render chatbot icon for half-screen mode
+  if (isHalfScreenMode && !isHalfScreenOpen) {
+    return (
+      <ConfigProvider theme={themeConfig}>
+        <button
+          className={`chatbot-icon ${isHalfScreenMode ? 'show' : ''}`}
+          onClick={toggleHalfScreen}
+          aria-label="Open chat"
+        >
+          <MessageOutlined />
+        </button>
+      </ConfigProvider>
+    );
+  }
+
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'} ${embeddingConfig.isEmbedded ? 'embedded' : ''}`}>
-        {!embeddingConfig.hideSidebar && (
+      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'} ${embeddingConfig.isEmbedded ? 'embedded' : ''} ${isHalfScreenMode ? 'half-screen' : ''} ${isHalfScreenOpen ? 'open' : ''}`}>
+        {!embeddingConfig.hideSidebar && !isHalfScreenMode && (
           <div className={`sidebar sidebar--${isDark ? 'dark' : 'light'}`}>
             <div className="sidebar-header">
               <h2>Airline Assistant</h2>
@@ -64,7 +90,7 @@ const ChatContainer: React.FC = () => {
             </div>
           </div>
         )}
-        <div className={`main-chat-area main-chat-area--${isDark ? 'dark' : 'light'} ${embeddingConfig.hideSidebar ? 'full-width' : ''}`}>
+        <div className={`main-chat-area main-chat-area--${isDark ? 'dark' : 'light'} ${embeddingConfig.hideSidebar || isHalfScreenMode ? 'full-width' : ''}`}>
           {!embeddingConfig.hideHeader && (
             <div className={`chat-header chat-header--${isDark ? 'dark' : 'light'}`}>
               <div>
@@ -72,13 +98,25 @@ const ChatContainer: React.FC = () => {
                   Airline Report Assistant
                 </h3>
               </div>
-              <button 
-                className="mobile-new-chat-btn"
-                onClick={handleNewChat}
-                aria-label="Start new chat"
-              >
-                New Chat
-              </button>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button 
+                  className="mobile-new-chat-btn"
+                  onClick={handleNewChat}
+                  aria-label="Start new chat"
+                >
+                  New Chat
+                </button>
+                {isHalfScreenMode && (
+                  <button
+                    className="mobile-new-chat-btn"
+                    onClick={closeHalfScreen}
+                    aria-label="Close chat"
+                    style={{ background: '#ff4d4f' }}
+                  >
+                    <CloseOutlined />
+                  </button>
+                )}
+              </div>
             </div>
           )}
           <div className="chat-content">
@@ -87,6 +125,16 @@ const ChatContainer: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Chatbot icon for half-screen mode when closed */}
+      {isHalfScreenMode && !isHalfScreenOpen && (
+        <button
+          className={`chatbot-icon ${isHalfScreenMode ? 'show' : ''}`}
+          onClick={toggleHalfScreen}
+          aria-label="Open chat"
+        >
+          <MessageOutlined />
+        </button>
+      )}
     </ConfigProvider>
   );
 };
