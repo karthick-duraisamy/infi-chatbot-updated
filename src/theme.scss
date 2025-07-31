@@ -4,10 +4,18 @@
 
 body {
   // Font family variables
-  --font-regular: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-semibold: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-bold: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-title: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-regular: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  --font-semibold: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  --font-bold: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  --font-title: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
 
   // Font size variables
   --title-size: 24px;
@@ -40,6 +48,22 @@ body.light {
 }
 
 body.dark {
+  // Font family variables for Open Sans
+  --font-regular: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+
+  --font-semibold: "Open Sans SemiBold", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+
+  --font-bold: "Open Sans Bold", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+
+  --font-title: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
   --ant-primary-color: #fd9646;
   --menuColor: #cdddf5;
   --background: #181a1b;
@@ -50,19 +74,19 @@ body.dark {
 
 // Example airline theme - JetBlue
 body.airline-jetblue {
-  --font-title: 'Poppins', sans-serif;
-  --font-regular: 'Poppins', sans-serif;
-  --font-semibold: 'Poppins', sans-serif;
-  --font-bold: 'Poppins', sans-serif;
+  --font-title: "Poppins", sans-serif;
+  --font-regular: "Poppins", sans-serif;
+  --font-semibold: "Poppins", sans-serif;
+  --font-bold: "Poppins", sans-serif;
   --ant-primary-color: #2196f3;
 }
 
 // Example airline theme - American Airlines
 body.airline-american {
-  --font-title: 'Helvetica Neue', Arial, sans-serif;
-  --font-regular: 'Helvetica Neue', Arial, sans-serif;
-  --font-semibold: 'Helvetica Neue', Arial, sans-serif;
-  --font-bold: 'Helvetica Neue', Arial, sans-serif;
+  --font-title: "Helvetica Neue", Arial, sans-serif;
+  --font-regular: "Helvetica Neue", Arial, sans-serif;
+  --font-semibold: "Helvetica Neue", Arial, sans-serif;
+  --font-bold: "Helvetica Neue", Arial, sans-serif;
   --ant-primary-color: #c41e3a;
 }
 
@@ -107,7 +131,6 @@ body.dark {
 
 // SCSS Variables for easier usage (optional mixins)
 @mixin theme-variables {
-
   // Recent Action Section
   .recent-action {
     background-color: var(--recentAction-bg);
