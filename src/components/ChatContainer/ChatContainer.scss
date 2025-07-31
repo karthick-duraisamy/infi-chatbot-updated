@@ -75,7 +75,9 @@
 .new-chat-button {
   height: 40px;
   border-radius: 8px;
-  font-weight: 500;
+  font-family: var(--font-semibold) !important;
+  font-weight: var(--weight-semibold) !important;
+  font-size: var(--button-size) !important;
   background: #4285f4;
   border-color: #4285f4;
 }

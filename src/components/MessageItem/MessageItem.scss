@@ -133,7 +133,9 @@
 
 .message-text {
   margin: 0;
-  font-size: 14px;
+  font-family: var(--font-regular) !important;
+  font-size: var(--message-size) !important;
+  font-weight: var(--weight-regular) !important;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -567,62 +569,4 @@
     }
   }
 }
-.message-item {
-  margin-bottom: 16px;
-
-  .message-content {
-    max-width: 70%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    word-wrap: break-word;
-    font-family: var(--font-regular);
-    font-size: var(--message-size);
-    font-weight: var(--weight-regular);
-    line-height: 1.5;
-
-    pre {
-      background: rgba(0, 0, 0, 0.1);
-      padding: 8px;
-      border-radius: 4px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
-    }
-
-    code {
-      background: rgba(0, 0, 0, 0.1);
-      padding: 2px 4px;
-      border-radius: 3px;
-      font-family: 'Courier New', monospace;
-    }
-  }
-
-  &.user-message {
-    display: flex;
-    justify-content: flex-end;
-
-    .message-content {
-      background: var(--ant-primary-color);
-      color: white;
-      font-weight: var(--weight-semibold);
-    }
-  }
-
-  &.ai-message {
-    display: flex;
-    justify-content: flex-start;
-
-    .message-content {
-      background: var(--menuColor);
-      color: var(--text-color);
-
-      pre {
-        background: rgba(0, 0, 0, 0.1);
-      }
-
-      code {
-        background: rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-}
+// Removed duplicate styles - using the main message styling above
