@@ -81,8 +81,8 @@ export const sendMessageToAI = createAsyncThunk<any, { message: string; attachme
 
       // Use the service's endpoints directly to fetch the JSON file
       const result = await dispatch(
-        // (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(requestData)
-        (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
+        (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(requestData)
+        // (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
       ).unwrap();
 
       // Return the entire JSON response object

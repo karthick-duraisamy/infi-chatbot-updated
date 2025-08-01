@@ -2,10 +2,15 @@ import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 import ChatContainer from './components/ChatContainer/ChatContainer';
 
-function App() {
+interface AppProps {
+  userId?: string;
+  token?: string;
+}
+
+function App({ userId, token }: AppProps) {
   return (
     <Provider store={store}>
-      <ChatContainer />
+      <ChatContainer userId={userId} token={token} />
     </Provider>
   );
 }

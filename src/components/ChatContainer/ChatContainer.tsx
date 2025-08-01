@@ -12,7 +12,14 @@ import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import config from '../../config/config.json';
 import './ChatContainer.scss';
 
-const ChatContainer: React.FC = () => {
+interface ChatContainerProps {
+  userId?: string;
+  token?: string;
+}
+
+const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
+  console.log('User ID:', userId);
+  console.log('Token:', token);
   const dispatch = useAppDispatch();
   const { isDark } = useAppSelector((state) => state.theme);
   const embeddingConfig = getEmbeddingConfig();
