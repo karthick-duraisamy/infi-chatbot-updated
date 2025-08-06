@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
   firstName: string;
@@ -8,7 +8,7 @@ export interface User {
 
 export interface Message {
   id: string;
-  sender: 'user' | 'ai';
+  sender: "user" | "ai";
   content: string;
   timestamp: number;
   isLoading?: boolean;
@@ -38,87 +38,104 @@ interface ChatState {
 }
 
 const initialState: ChatState = {
-  messages: [
-    {
-      id: '1',
-      sender: 'ai',
-      content: 'Hello! I\'m your AI assistant for airline reporting. I can help you generate custom reports, filter data by date ranges, select specific columns, and analyze booking and payment information. What would you like to explore today?',
-      timestamp: Date.now(),
-    }
-  ],
+  messages: [],
   isTyping: false,
   currentUser: {
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'johndoe',
+    firstName: "John",
+    lastName: "Doe",
   },
 };
 
 // Dynamic local JSON response loading using Redux Toolkit Query
-export const sendMessageToAI = createAsyncThunk<any, { message: string; attachments?: any[], requestData?: any }>(
-  'chat/sendMessageToAI',
+export const sendMessageToAI = createAsyncThunk<
+  any,
+  { message: string; attachments?: any[]; requestData?: any }
+>(
+  "chat/sendMessageToAI",
   async ({ message, attachments, requestData }, { dispatch, extra }) => {
     // Determine which JSON file to load based on message content
     const lowerMessage = message.toLowerCase().trim();
-    let jsonFileName = 'hello.json'; // default fallback
+    let jsonFileName = "hello.json"; // default fallback
 
     // Map common keywords to JSON files
-    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      jsonFileName = 'hello.json';
-    } else if (lowerMessage.includes('booking') || lowerMessage.includes('flight')) {
-      jsonFileName = 'bookingdetails.json';
-    } else if (lowerMessage.includes('group') || lowerMessage.includes('request')) {
-      jsonFileName = 'GroupRequestReport.json';
-    } else if (lowerMessage.includes('last 3 months') || lowerMessage.includes('3 months')) {
-      jsonFileName = 'last3months.json';
-    } else if (lowerMessage.includes('report') || lowerMessage.includes('get report')) {
-      jsonFileName = 'getthereport.json';
+    if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
+      jsonFileName = "hello.json";
+    } else if (
+      lowerMessage.includes("booking") ||
+      lowerMessage.includes("flight")
+    ) {
+      jsonFileName = "bookingdetails.json";
+    } else if (
+      lowerMessage.includes("group") ||
+      lowerMessage.includes("request")
+    ) {
+      jsonFileName = "GroupRequestReport.json";
+    } else if (
+      lowerMessage.includes("last 3 months") ||
+      lowerMessage.includes("3 months")
+    ) {
+      jsonFileName = "last3months.json";
+    } else if (
+      lowerMessage.includes("report") ||
+      lowerMessage.includes("get report")
+    ) {
+      jsonFileName = "getthereport.json";
     }
 
     try {
       // Import the service endpoints
-      const { ChatBotSerice } = await import('../services/service');
+      const { ChatBotSerice } = await import("../services/service");
 
       // Use the service's endpoints directly to fetch the JSON file
       const result = await dispatch(
-        (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(requestData)
+        (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(
+          requestData
+        )
         // (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
       ).unwrap();
 
       // Return the entire JSON response object
       return result;
     } catch (error) {
-      console.error('Error loading JSON response:', error);
+      console.error("Error loading JSON response:", error);
 
       // Fallback response if JSON loading fails
       return {
-        id: 'error-' + Date.now(),
-        choices: [{
-          message: {
-            role: 'assistant',
-            content: `<p>I apologize, but I encountered an error loading the response for "${message}". Please try again or contact support.</p>`
-          }
-        }]
+        id: "error-" + Date.now(),
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: `<p>I apologize, but I encountered an error loading the response for "${message}". Please try again or contact support.</p>`,
+            },
+          },
+        ],
       };
     }
   }
 );
 
 const chatSlice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
-    addUserMessage: (state, action: PayloadAction<{ content: string; attachments?: any[] }>) => {
+    addUserMessage: (
+      state,
+      action: PayloadAction<{ content: string; attachments?: any[] }>
+    ) => {
       const newMessage: Message = {
         id: Date.now().toString(),
-        sender: 'user',
+        sender: "user",
         content: action.payload.content,
         timestamp: Date.now(),
         attachments: action.payload.attachments,
       };
       state.messages.push(newMessage);
     },
-    updateUser: (state, action: PayloadAction<Partial<ChatState['currentUser']>>) => {
+    updateUser: (
+      state,
+      action: PayloadAction<Partial<ChatState["currentUser"]>>
+    ) => {
       state.currentUser = { ...state.currentUser, ...action.payload };
     },
     setTyping: (state, action: PayloadAction<boolean>) => {
@@ -139,7 +156,7 @@ const chatSlice = createSlice({
         const jsonResponse = action.payload;
 
         // Extract content from the JSON response
-        let content = '';
+        let content = "";
         let choices = undefined;
 
         if (jsonResponse.choices && jsonResponse.choices.length > 0) {
@@ -149,7 +166,7 @@ const chatSlice = createSlice({
 
         const aiMessage: Message = {
           id: jsonResponse.id || Date.now().toString(),
-          sender: 'ai',
+          sender: "ai",
           content: content,
           timestamp: Date.now(),
           choices: choices,
@@ -160,8 +177,9 @@ const chatSlice = createSlice({
         state.isTyping = false;
         const errorMessage: Message = {
           id: Date.now().toString(),
-          sender: 'ai',
-          content: 'I apologize, but I encountered an error processing your request. Please try again.',
+          sender: "ai",
+          content:
+            "I apologize, but I encountered an error processing your request. Please try again.",
           timestamp: Date.now(),
         };
         state.messages.push(errorMessage);

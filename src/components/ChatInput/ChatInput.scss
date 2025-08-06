@@ -1,5 +1,10 @@
 .chat-input {
-  padding: 20px 24px 24px 24px;
+  position: fixed;
+  z-index: 4;
+  min-width: 80%;
+  margin: auto;
+  bottom: 0;
+  padding: 0px 24px 2px;
   border-top: none;
 
   &--light {
@@ -296,7 +301,7 @@
 
 .send-button {
   height: 40px;
-  width: 40px;
+  width: 40px !important;
   border-radius: 20px;
   display: flex;
   align-items: center;
