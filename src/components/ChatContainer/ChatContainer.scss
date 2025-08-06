@@ -89,26 +89,8 @@
     border-right-color: #424242;
   }
 
-  /* Mobile responsive behavior */
+  /* Mobile responsive behavior - hide sidebar on mobile */
   @media (max-width: 575px) {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid;
-    padding: 12px 16px;
-    
-    &--light {
-      border-bottom-color: #e8e8e8;
-    }
-
-    &--dark {
-      border-bottom-color: #424242;
-    }
-  }
-
-  /* Very small devices - hide sidebar completely */
-  @media (max-width: 319px) {
     display: none;
   }
 
