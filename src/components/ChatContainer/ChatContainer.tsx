@@ -1,6 +1,6 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { ConfigProvider, theme as antTheme, Button } from 'antd';
-import { PlusOutlined, MessageOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined, MessageOutlined, CloseOutlined, BarChartOutlined, DragOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { clearMessages } from '../../store/chatSlice';
@@ -24,6 +24,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
   const { isDark } = useAppSelector((state) => state.theme);
   const embeddingConfig = getEmbeddingConfig();
   const [isHalfScreenOpen, setIsHalfScreenOpen] = useState(false);
+  const [chatWidth, setChatWidth] = useState(400);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
   const isHalfScreenMode = config.displayView === 'half';
 
   // Enable height communication with parent window
@@ -33,6 +36,42 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
   React.useEffect(() => {
     applyEmbeddingStyles(embeddingConfig);
   }, [embeddingConfig]);
+
+  // Handle resize functionality
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      
+      const newWidth = window.innerWidth - e.clientX;
+      const minWidth = 300;
+      const maxWidth = Math.min(800, window.innerWidth * 0.8);
+      
+      setChatWidth(Math.max(minWidth, Math.min(maxWidth, newWidth)));
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'ew-resize';
+      document.body.style.userSelect = 'none';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isResizing]);
 
   const handleNewChat = useCallback(() => {
     dispatch(clearMessages());
@@ -44,6 +83,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
 
   const closeHalfScreen = useCallback(() => {
     setIsHalfScreenOpen(false);
+  }, []);
+
+  const handleNewChart = useCallback(() => {
+    // Add logic for creating a new chart
+    console.log('Creating new chart...');
+    // You can dispatch an action or show a modal here
   }, []);
 
   const themeConfig = {
@@ -77,7 +122,19 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
 
   return (
     <ConfigProvider theme={themeConfig}>
-      <div className={`chat-container chat-container--${isDark ? 'dark' : 'light'} ${embeddingConfig.isEmbedded ? 'embedded' : ''} ${isHalfScreenMode ? 'half-screen' : ''} ${isHalfScreenOpen ? 'open' : ''}`}>
+      <div 
+        className={`chat-container chat-container--${isDark ? 'dark' : 'light'} ${embeddingConfig.isEmbedded ? 'embedded' : ''} ${isHalfScreenMode ? 'half-screen' : ''} ${isHalfScreenOpen ? 'open' : ''}`}
+        style={isHalfScreenMode && isHalfScreenOpen ? { width: `${chatWidth}px` } : {}}
+      >
+        {isHalfScreenMode && isHalfScreenOpen && (
+          <div 
+            ref={resizeRef}
+            className="resize-handle"
+            onMouseDown={handleMouseDown}
+          >
+            <DragOutlined />
+          </div>
+        )}
         {!embeddingConfig.hideSidebar && !isHalfScreenMode && (
           <div className={`sidebar sidebar--${isDark ? 'dark' : 'light'}`}>
             <div className="sidebar-header">
@@ -106,6 +163,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
                 </h3>
               </div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button 
+                  className="mobile-new-chat-btn new-chart-btn"
+                  onClick={handleNewChart}
+                  aria-label="Create new chart"
+                >
+                  <BarChartOutlined /> New Chart
+                </button>
                 <button 
                   className="mobile-new-chat-btn"
                   onClick={handleNewChat}
