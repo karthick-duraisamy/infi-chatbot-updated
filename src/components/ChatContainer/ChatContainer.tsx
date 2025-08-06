@@ -165,17 +165,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <button 
                   className="header-btn new-chart-btn"
-                  onClick={handleNewChart}
-                  aria-label="Create new chart"
-                >
-                  <BarChartOutlined /> New Chart
-                </button>
-                <button 
-                  className="header-btn"
                   onClick={handleNewChat}
                   aria-label="Start new chat"
                 >
-                  New Chat
+                  <BarChartOutlined /> New Chat
                 </button>
                 {isHalfScreenMode && (
                   <button

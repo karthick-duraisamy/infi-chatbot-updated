@@ -294,10 +294,12 @@
   }
 
   &.close-btn {
-    background: #ff4d4f;
+    background: transparent;
+    color: #ff4d4f;
     
     &:hover {
-      background: #ff7875;
+      background: rgba(255, 77, 79, 0.1);
+      color: #ff4d4f;
     }
   }
 
