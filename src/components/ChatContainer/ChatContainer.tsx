@@ -164,14 +164,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
               </div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <button 
-                  className="mobile-new-chat-btn new-chart-btn"
+                  className="header-btn new-chart-btn"
                   onClick={handleNewChart}
                   aria-label="Create new chart"
                 >
                   <BarChartOutlined /> New Chart
                 </button>
                 <button 
-                  className="mobile-new-chat-btn"
+                  className="header-btn"
                   onClick={handleNewChat}
                   aria-label="Start new chat"
                 >
@@ -179,10 +179,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
                 </button>
                 {isHalfScreenMode && (
                   <button
-                    className="mobile-new-chat-btn"
+                    className="header-btn close-btn"
                     onClick={closeHalfScreen}
                     aria-label="Close chat"
-                    style={{ background: '#ff4d4f' }}
                   >
                     <CloseOutlined />
                   </button>
