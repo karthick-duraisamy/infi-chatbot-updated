@@ -36,6 +36,9 @@
     z-index: 1000;
     transform: translateY(100%);
     transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
     &.open {
       transform: translateY(0);
@@ -187,6 +190,9 @@
   .chat-container.half-screen & {
     border-left: none;
     height: 100%;
+    margin-left: 0;
+    flex: 1;
+    overflow: hidden;
   }
 }
 
@@ -242,6 +248,16 @@
     }
   }
 
+  /* Half screen mode header adjustments */
+  .chat-container.half-screen & {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 12px 16px;
+    flex-shrink: 0;
+  }
+
   @media (max-width: 319px) {
     padding: 10px 12px;
     
@@ -295,10 +311,13 @@
   /* Mobile responsive with sticky footer */
   @media (max-width: 900px) {
     height: calc(100vh - 60px); /* Adjust based on header height */
-    
-    .chat-container.half-screen & {
-      height: calc(100% - 60px);
-    }
+  }
+
+  /* Half screen mode content adjustments */
+  .chat-container.half-screen & {
+    height: calc(100% - 60px);
+    flex: 1;
+    overflow: hidden;
   }
 }
 
