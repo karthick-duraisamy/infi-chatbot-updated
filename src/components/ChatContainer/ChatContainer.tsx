@@ -163,13 +163,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
                 </h3>
               </div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <button 
-                  className="header-btn new-chart-btn"
-                  onClick={handleNewChat}
-                  aria-label="Start new chat"
-                >
-                  New chat
-                </button>
+                {/* Show New Chat button only on mobile when sidebar is hidden */}
+                {(embeddingConfig.hideSidebar || isHalfScreenMode) && (
+                  <button 
+                    className="header-btn mobile-new-chat-btn"
+                    onClick={handleNewChat}
+                    aria-label="Start new chat"
+                  >
+                    New chat
+                  </button>
+                )}
                 {isHalfScreenMode && (
                   <button
                     className="header-btn close-btn"

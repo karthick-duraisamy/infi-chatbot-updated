@@ -283,6 +283,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  padding: 6px 12px;
 
   &:hover {
     background: #3367d6;
@@ -290,6 +291,13 @@
 
   &:active {
     transform: scale(0.98);
+  }
+
+  &.mobile-new-chat-btn {
+    /* Show only when sidebar is hidden on mobile */
+    @media (min-width: 901px) {
+      display: none;
+    }
   }
 
   &.close-btn {
