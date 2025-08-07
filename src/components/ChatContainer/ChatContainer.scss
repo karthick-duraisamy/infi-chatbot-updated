@@ -270,9 +270,8 @@
 }
 
 .header-btn {
-  padding: 8px 16px;
-  font-size: 14px;
-  height: 36px;
+  font-size: 12px;
+  height: 30px;
   border-radius: 8px;
   background: #4285f4;
   color: white;
@@ -370,18 +369,6 @@
   }
 }
 
-/* New Chart button styling */
-.new-chart-btn {
-  background: #52c41a !important;
-  
-  &:hover {
-    background: #389e0d !important;
-  }
-
-  .anticon {
-    margin-right: 4px;
-  }
-}
 
 /* Chatbot icon for half-screen mode */
 .chatbot-icon {

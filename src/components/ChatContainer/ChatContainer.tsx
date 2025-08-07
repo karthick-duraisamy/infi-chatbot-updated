@@ -168,7 +168,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
                   onClick={handleNewChat}
                   aria-label="Start new chat"
                 >
-                  <BarChartOutlined /> New Chat
+                  New chat
                 </button>
                 {isHalfScreenMode && (
                   <button
