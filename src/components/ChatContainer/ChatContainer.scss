@@ -95,7 +95,7 @@
   }
 
   /* Mobile responsive behavior - hide sidebar on mobile */
-  @media (max-width: 900px) {
+  @media (max-width: 899px) {
     display: none;
   }
 
@@ -172,7 +172,7 @@
   }
 
   /* Mobile responsive behavior */
-  @media (max-width: 900px) {
+  @media (max-width: 899px) {
     margin-left: 0;
     border-left: none;
     border-top: none;
@@ -236,7 +236,7 @@
   }
 
   /* Mobile responsive header with sticky positioning */
-  @media (max-width: 900px) {
+  @media (max-width: 899px) {
     width: 100%;
     padding: 12px 16px;
     position: sticky;
@@ -294,8 +294,8 @@
   }
 
   &.mobile-new-chat-btn {
-    /* Show only when sidebar is hidden on mobile */
-    @media (min-width: 901px) {
+    /* Show only when sidebar is hidden (mobile/responsive view) */
+    @media (min-width: 900px) {
       display: none;
     }
   }
