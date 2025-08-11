@@ -108,7 +108,10 @@ export const sendMessageToAI = createAsyncThunk<
         }
 
         result = await dispatch(
-          (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
+          // (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
+          (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(
+            requestData
+          )
         ).unwrap();
       }
 
