@@ -1,6 +1,6 @@
-import { Provider } from 'react-redux';
-import { store } from './store/store.ts';
-import ChatContainer from './components/ChatContainer/ChatContainer';
+import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
+import ChatContainer from "./components/ChatContainer/ChatContainer";
 
 interface AppProps {
   userId?: string;

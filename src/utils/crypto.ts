@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 // The following set of code is used for encrypt the data for security purpose
 export const encodeString = (text: string, key: string): string => {
@@ -15,10 +15,10 @@ export const decodeString = (encodedText: string, key: string): string => {
 
 // The following set of code is used for decrypt the reponse or data using AES method.
 export const decryptResponse = (encodedResponse: string) => {
-  const key = '97cc+XE5NTUVhWOrdxrESw==';
+  const key = "97cc+XE5NTUVhWOrdxrESw==";
   try {
     const decryptedString = CryptoJS.AES.decrypt(
-      encodedResponse.replace(/^"(.*)"$/, '$1'),
+      encodedResponse.replace(/^"(.*)"$/, "$1"),
       CryptoJS.enc.Base64.parse(key),
       { mode: CryptoJS.mode.ECB }
     ).toString(CryptoJS.enc.Utf8);
@@ -33,9 +33,13 @@ export const decryptResponse = (encodedResponse: string) => {
 // The following set of code is used for encrypt the request or data using AES method.
 export const encryptRequest = (requestValue: any) => {
   let requestData = JSON.stringify(
-    CryptoJS.AES.encrypt(JSON.stringify(requestValue), CryptoJS.enc.Base64.parse('97cc+XE5NTUVhWOrdxrESw=='), {
-      mode: CryptoJS.mode.ECB
-    }).toString()
+    CryptoJS.AES.encrypt(
+      JSON.stringify(requestValue),
+      CryptoJS.enc.Base64.parse("97cc+XE5NTUVhWOrdxrESw=="),
+      {
+        mode: CryptoJS.mode.ECB,
+      }
+    ).toString()
   );
   return requestData;
 };

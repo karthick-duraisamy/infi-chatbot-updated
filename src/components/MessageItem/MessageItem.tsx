@@ -1,10 +1,14 @@
-import React from 'react';
-import { Card, Avatar, Button, Tooltip } from 'antd';
-import { UserOutlined, RobotOutlined, DownloadOutlined } from '@ant-design/icons';
-import { useAppSelector } from '../../hooks/useAppSelector';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { Message, addUserMessage, sendMessageToAI } from '../../store/chatSlice';
-import './MessageItem.scss';
+import React from "react";
+import { Card, Avatar, Button, Tooltip } from "antd";
+import { RobotOutlined, DownloadOutlined } from "@ant-design/icons";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import {
+  Message,
+  addUserMessage,
+  sendMessageToAI,
+} from "../../store/chatSlice";
+import "./MessageItem.scss";
 
 interface MessageItemProps {
   message: Message;
@@ -13,15 +17,15 @@ interface MessageItemProps {
 const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const isDark = useAppSelector((state) => state.theme.isDark);
   const dispatch = useAppDispatch();
-  const isUser = message.sender === 'user';
+  const isUser = message.sender === "user";
   const currentUser = useAppSelector((state) => state.chat.currentUser);
 
   const generateUserAvatar = () => {
-    if (!currentUser?.firstName) return 'U';
-    
+    if (!currentUser?.firstName) return "U";
+
     const firstName = currentUser.firstName.trim();
     const lastName = currentUser.lastName?.trim();
-    
+
     if (lastName) {
       return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
     } else if (firstName.length >= 2) {
@@ -33,7 +37,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
 
   const handleDownload = (attachment: any) => {
     if (attachment.downloadUrl) {
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = attachment.downloadUrl;
       link.download = attachment.name;
       document.body.appendChild(link);
@@ -44,7 +48,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
 
   const handleImageClick = (attachment: any) => {
     if (attachment.url || attachment.preview) {
-      window.open(attachment.url || attachment.preview, '_blank');
+      window.open(attachment.url || attachment.preview, "_blank");
     }
   };
 
@@ -55,17 +59,17 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   };
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const formatTime = (timestamp: number): string => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -73,31 +77,46 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     // Use a regular expression to match all <table> tags and their content
     const tableRegex = /(<table[^>]*>[\s\S]*?<\/table>)/gi;
     // Replace each table with the table wrapped in a div with class 'table-scroll-container'
-    const modifiedContent = content.replace(tableRegex, '<div class="table-scroll-container">$1</div>');
+    const modifiedContent = content.replace(
+      tableRegex,
+      '<div class="table-scroll-container">$1</div>'
+    );
 
     return <div dangerouslySetInnerHTML={{ __html: modifiedContent }} />;
   };
 
   return (
-    <div className={`message-item message-item--${isUser ? 'user' : 'ai'} message-item--${isDark ? 'dark' : 'light'}`}>
-      <Avatar 
-        size={40} 
+    <div
+      className={`message-item message-item--${
+        isUser ? "user" : "ai"
+      } message-item--${isDark ? "dark" : "light"}`}
+    >
+      <Avatar
+        size={40}
         icon={!isUser ? <RobotOutlined /> : undefined}
-        className={`message-avatar ${isUser ? 'user-avatar' : 'ai-avatar'}`}
+        className={`message-avatar ${isUser ? "user-avatar" : "ai-avatar"}`}
       >
-        {isUser ? generateUserAvatar() : 'AI'}
+        {isUser ? generateUserAvatar() : "AI"}
       </Avatar>
 
-      <div className={`message-content message-content--${isUser ? 'user' : 'ai'}`}>
+      <div
+        className={`message-content message-content--${isUser ? "user" : "ai"}`}
+      >
         <div className="message-bubble-container">
-          <Card 
+          <Card
             size="small"
-            className={`message-card message-card--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}
+            className={`message-card message-card--${isUser ? "user" : "ai"}-${
+              isDark ? "dark" : "light"
+            }`}
             styles={{
-              body: { padding: '12px 16px' }
+              body: { padding: "12px 16px" },
             }}
           >
-            <div className={`message-text message-text--${isUser ? 'user' : 'ai'} message-text--${isDark ? 'dark' : 'light'}`}>
+            <div
+              className={`message-text message-text--${
+                isUser ? "user" : "ai"
+              } message-text--${isDark ? "dark" : "light"}`}
+            >
               {renderContent(message.content)}
             </div>
 
@@ -111,7 +130,9 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                     type="default"
                     size="small"
                     onClick={() => handleChoiceClick(choice.message.content)}
-                    className={`choice-button choice-button--${isDark ? 'dark' : 'light'}`}
+                    className={`choice-button choice-button--${
+                      isDark ? "dark" : "light"
+                    }`}
                   >
                     {choice.message.content}
                   </Button>
@@ -124,28 +145,42 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
               <div className="message-attachments">
                 {message.attachments.map((attachment) => (
                   <div key={attachment.id} className="attachment-item">
-                    {attachment.type.startsWith('image/') ? (
-                      <div 
-                        className="attachment-image" 
+                    {attachment.type.startsWith("image/") ? (
+                      <div
+                        className="attachment-image"
                         onClick={() => handleImageClick(attachment)}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                       >
                         {attachment.preview && (
-                          <img 
-                            src={attachment.preview} 
+                          <img
+                            src={attachment.preview}
                             alt={attachment.name}
-                            style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
+                            style={{
+                              maxWidth: "200px",
+                              maxHeight: "200px",
+                              borderRadius: "8px",
+                            }}
                           />
                         )}
-                        <div className={`file-name-overlay file-name-overlay--${isUser ? 'user' : 'ai'}-${isDark ? 'dark' : 'light'}`}>
+                        <div
+                          className={`file-name-overlay file-name-overlay--${
+                            isUser ? "user" : "ai"
+                          }-${isDark ? "dark" : "light"}`}
+                        >
                           Click to view
                         </div>
                       </div>
                     ) : (
-                      <div className={`attachment-file attachment-file--${isDark ? 'dark' : 'light'}`}>
+                      <div
+                        className={`attachment-file attachment-file--${
+                          isDark ? "dark" : "light"
+                        }`}
+                      >
                         <div className="file-info">
                           <div className="file-name">{attachment.name}</div>
-                          <div className="file-size">{formatFileSize(attachment.size)}</div>
+                          <div className="file-size">
+                            {formatFileSize(attachment.size)}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -167,7 +202,11 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
             )}
           </Card>
 
-          <div className={`message-time message-time--${isUser ? 'user' : 'ai'} message-time--${isDark ? 'dark' : 'light'}`}>
+          <div
+            className={`message-time message-time--${
+              isUser ? "user" : "ai"
+            } message-time--${isDark ? "dark" : "light"}`}
+          >
             {formatTime(message.timestamp)}
           </div>
         </div>

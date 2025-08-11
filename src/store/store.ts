@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chatReducer from './chatSlice';
-import themeReducer from './themeSlice';
+import chatReducer from "./chatSlice";
+import themeReducer from "./themeSlice";
 import { ChatBotSerice } from "../services/service";
 
 export const store = configureStore({

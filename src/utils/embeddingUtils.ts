@@ -1,4 +1,3 @@
-
 export const isEmbedded = (): boolean => {
   try {
     return window.self !== window.top;
@@ -9,22 +8,24 @@ export const isEmbedded = (): boolean => {
 
 export const getEmbeddingConfig = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  
+
   return {
     isEmbedded: isEmbedded(),
-    theme: urlParams.get('theme') || 'light',
-    height: urlParams.get('height') || 'auto',
-    hideHeader: urlParams.get('hideHeader') === 'true',
-    hideSidebar: urlParams.get('hideSidebar') === 'true',
+    theme: urlParams.get("theme") || "light",
+    height: urlParams.get("height") || "auto",
+    hideHeader: urlParams.get("hideHeader") === "true",
+    hideSidebar: urlParams.get("hideSidebar") === "true",
   };
 };
 
-export const applyEmbeddingStyles = (config: ReturnType<typeof getEmbeddingConfig>) => {
-  const container = document.querySelector('.chat-container');
+export const applyEmbeddingStyles = (
+  config: ReturnType<typeof getEmbeddingConfig>
+) => {
+  const container = document.querySelector(".chat-container");
   if (container && config.isEmbedded) {
-    container.classList.add('embedded');
-    
-    if (config.height !== 'auto') {
+    container.classList.add("embedded");
+
+    if (config.height !== "auto") {
       (container as HTMLElement).style.height = config.height;
     }
   }

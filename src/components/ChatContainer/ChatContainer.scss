@@ -63,7 +63,7 @@
   /* Mobile-first responsive design */
   @media (max-width: 575px) {
     flex-direction: column;
-    
+
     &:not(.half-screen) {
       min-height: 100vh;
       height: 100vh;
@@ -262,7 +262,7 @@
 
   @media (max-width: 319px) {
     padding: 10px 12px;
-    
+
     h3 {
       font-size: 14px;
     }
@@ -303,7 +303,7 @@
   &.close-btn {
     background: transparent;
     color: #ff4d4f;
-    
+
     &:hover {
       background: rgba(255, 77, 79, 0.1);
       color: #ff4d4f;
@@ -370,13 +370,12 @@
 
 .resize-handle:hover {
   background: rgba(66, 133, 244, 0.1);
-  
+
   .anticon {
     opacity: 1 !important;
     color: #4285f4;
   }
 }
-
 
 /* Chatbot icon for half-screen mode */
 .chatbot-icon {

@@ -61,18 +61,15 @@
   font-weight: bold;
 
   &.user-avatar {
-    background: #0E2071;
+    background: #0e2071;
     animation: avatarBounceRight 0.5s ease-out;
   }
 
   &.ai-avatar {
-    background: #0E2071;
+    background: #0e2071;
     animation: avatarBounceLeft 0.5s ease-out;
   }
 
-  &.last-message-avatar {
-    // Additional styles for last message avatar if needed
-  }
 }
 
 .message-content {
@@ -107,7 +104,7 @@
   // min-width: 120px;
 
   &--user-light {
-    background: #0E20711A;
+    background: #0e20711a;
     border: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
@@ -206,7 +203,8 @@
     white-space: nowrap;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px 12px;
     text-align: left;
     border-bottom: 1px solid #e1e5e9;
@@ -258,7 +256,8 @@
       background: #262626;
     }
 
-    th, td {
+    th,
+    td {
       border-color: #424242;
       color: #ffffff;
 
@@ -287,10 +286,17 @@
       font-size: 11px;
     }
 
-    th, td {
+    th,
+    td {
       padding: 6px 8px;
       min-width: 80px;
     }
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1800px) {
+  .message-item:nth-child(1) {
+    margin-top: 20px;
   }
 }
 
