@@ -17,6 +17,14 @@ const service = ChatBotSerice.enhanceEndpoints({
         body: requestInfo,
       }),
     }),
+    downloadReport: builder.mutation<Blob, any>({
+      query: (requestInfo) => ({
+        method: "POST",
+        url: `/chat/completions`,
+        body: requestInfo,
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
   }),
 });
 

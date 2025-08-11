@@ -9,6 +9,33 @@ import {
   sendMessageToAI,
 } from "../../store/chatSlice";
 import "./MessageItem.scss";
+import CryptoJS from 'crypto-js';
+import { saveAs } from 'file-saver';
+
+// Mock configService for demonstration purposes. Replace with your actual service.
+const mockConfigService = {
+  get: (key: string): string | undefined => {
+    if (key === 'en') {
+      // Replace with your actual encryption key
+      return 'your-secret-encryption-key-here';
+    }
+    return undefined;
+  }
+};
+
+// Mock http service for demonstration purposes. Replace with your actual http client.
+const mockHttp = {
+  post: (url: string, body: FormData, options: { responseType: string }) => {
+    // Simulate a successful download response
+    return {
+      subscribe: (callback: (response: Blob) => void) => {
+        // Create a dummy blob for demonstration
+        const dummyBlob = new Blob(["This is a dummy file content."], { type: "application/octet-stream" });
+        callback(dummyBlob);
+      }
+    };
+  }
+};
 
 interface MessageItemProps {
   message: Message;
@@ -36,15 +63,80 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   };
 
   const handleDownload = (attachment: any) => {
-    if (attachment.downloadUrl) {
-      const link = document.createElement("a");
-      link.href = attachment.downloadUrl;
-      link.download = attachment.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    if (attachment.downloadUrl || attachment.url) {
+      // This part is for handling direct download links
+      if (attachment.downloadUrl) {
+        const link = document.createElement("a");
+        link.href = attachment.downloadUrl;
+        link.download = attachment.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        // Optionally show a success message
+        alert('Your report is downloaded properly');
+      } else if (attachment.url) {
+        // This part handles the case where the URL might be a direct file URL
+        // and the server expects a specific content type or handling.
+        // For binary data that needs encryption and POST request, use the downloadReport function.
+
+        // Example: If attachment.url is meant for direct download without encryption
+        // const link = document.createElement("a");
+        // link.href = attachment.url;
+        // link.download = attachment.name || 'downloaded_file';
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+        // alert('Your report is downloaded properly');
+
+        // For the specific requirement of downloading binary info (like CSV/Excel)
+        // via POST with encryption, we need to call a dedicated function.
+        // Let's assume the attachment object has a property to indicate this.
+        // For this example, we'll use a placeholder logic.
+        // In a real scenario, you'd check attachment.type or a specific flag.
+
+        // Simulating the download of binary info (CSV/Excel)
+        // Assuming attachment.type indicates it's a file to be downloaded via POST
+        if (attachment.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || attachment.type === 'text/csv') {
+          downloadReport(attachment.dataForDownload, attachment.actionName, attachment.url, attachment.fileName);
+        } else {
+          // Fallback for other types if needed, or handle as direct link
+          const link = document.createElement("a");
+          link.href = attachment.url;
+          link.download = attachment.name || 'downloaded_file';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          alert('Your report is downloaded properly');
+        }
+      }
     }
   };
+
+  // Function to handle downloading binary files via POST with encryption
+  const downloadReport = (
+    inputData: any,
+    actionName: string,
+    url: string,
+    fileName: string
+  ): any => {
+    // AES encryption
+    // tslint:disable-next-line:max-line-length
+    const data: string = CryptoJS.AES.encrypt(
+      JSON.stringify(inputData),
+      CryptoJS.enc.Base64.parse(mockConfigService.get('en')!), // Using mock service
+      { mode: CryptoJS.mode.ECB }
+    ).toString();
+    const formData = new FormData();
+    formData.append('data', data);
+
+    // Use the mock http service for demonstration
+    mockHttp.post(url, formData, { responseType: 'blob' })
+      .subscribe((response: Blob) => {
+        saveAs(response, `${fileName}.${actionName}`);
+        alert('Your report is downloaded properly');
+      });
+  };
+
 
   const handleImageClick = (attachment: any) => {
     if (attachment.url || attachment.preview) {
@@ -87,9 +179,9 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
 
   return (
     <div
-      className={`message-item message-item--${
-        isUser ? "user" : "ai"
-      } message-item--${isDark ? "dark" : "light"}`}
+      className={`message-item message-item--${isUser ? "user" : "ai"} message-item--${
+        isDark ? "dark" : "light"
+      } ${message.isDownload ? 'message-item--download' : ''}`}
     >
       <Avatar
         size={40}

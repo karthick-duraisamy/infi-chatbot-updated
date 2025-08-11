@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { downloadFile, isBinaryResponse, detectFileType } from "../utils/downloadUtils";
 
 export interface User {
   firstName: string;
@@ -29,6 +30,8 @@ export interface Message {
     preview?: string;
     downloadUrl?: string;
   }[];
+  isDownload?: boolean;
+  downloadSuccess?: boolean;
 }
 
 interface ChatState {
@@ -94,19 +97,34 @@ export const sendMessageToAI = createAsyncThunk<
         // (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
       ).unwrap();
 
-      // Return the entire JSON response object
+      // Handle binary file downloads
+      if (isBinaryResponse(result)) {
+        const fileName = message.split(' ').join('_'); // Simple filename generation
+        const fileType = detectFileType(result);
+        await downloadFile(result, fileName, fileType);
+        return {
+          id: "download-" + Date.now(),
+          sender: "ai",
+          content: `<p>Your report ('${fileName}.${fileType}') has been downloaded successfully.</p>`,
+          timestamp: Date.now(),
+          isDownload: true,
+          downloadSuccess: true,
+        };
+      }
+
+      // Return the entire JSON response object for text/html content
       return result;
     } catch (error) {
-      console.error("Error loading JSON response:", error);
+      console.error("Error loading response:", error);
 
-      // Fallback response if JSON loading fails
+      // Fallback response if loading fails
       return {
         id: "error-" + Date.now(),
         choices: [
           {
             message: {
               role: "assistant",
-              content: `<p>I apologize, but I encountered an error loading the response for "${message}". Please try again or contact support.</p>`,
+              content: `<p>I apologize, but I encountered an error processing your request. Please try again or contact support.</p>`,
             },
           },
         ],
@@ -153,19 +171,31 @@ const chatSlice = createSlice({
       })
       .addCase(sendMessageToAI.fulfilled, (state, action) => {
         state.isTyping = false;
-        const jsonResponse = action.payload;
+        const responseData = action.payload;
 
-        // Extract content from the JSON response
+        // Check if the payload is a direct message object (for downloads)
+        if (responseData.sender === "ai" && responseData.isDownload) {
+          state.messages.push(responseData);
+          return;
+        }
+
+        // Handle regular text/HTML responses
         let content = "";
         let choices = undefined;
 
-        if (jsonResponse.choices && jsonResponse.choices.length > 0) {
-          content = jsonResponse.choices[0].message.content;
-          choices = jsonResponse.choices;
+        if (responseData.choices && responseData.choices.length > 0) {
+          content = responseData.choices[0].message.content;
+          choices = responseData.choices;
+        } else if (responseData.content) {
+          // Handle cases where response is directly the content
+          content = responseData.content;
+        } else {
+          // Fallback for unexpected response structures
+          content = `<p>Received an unexpected response format.</p>`;
         }
 
         const aiMessage: Message = {
-          id: jsonResponse.id || Date.now().toString(),
+          id: responseData.id || Date.now().toString(),
           sender: "ai",
           content: content,
           timestamp: Date.now(),

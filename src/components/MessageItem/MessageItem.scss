@@ -51,6 +51,30 @@
 
   &--ai {
     flex-direction: row;
+    justify-content: flex-start;
+
+    .message-content {
+      align-items: flex-start;
+    }
+  }
+
+  &--download {
+    .message-card {
+      border-left: 4px solid #52c41a;
+
+      &.message-card--ai-dark {
+        border-left-color: #73d13d;
+      }
+    }
+
+    .message-text {
+      color: #52c41a;
+      font-weight: 500;
+
+      &.message-text--ai.message-text--dark {
+        color: #73d13d;
+      }
+    }
   }
 }
 
