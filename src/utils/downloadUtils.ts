@@ -48,6 +48,32 @@ export const downloadFile = async (
   }
 };
 
+export const downloadDirectBinary = async (fileType: 'excel' | 'csv'): Promise<boolean> => {
+  try {
+    const endpoint = fileType === 'excel' ? '/download-excel' : '/download-csv';
+    
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzOTM4ODgzLCJpYXQiOjE3NTM4NjY5OTQsImp0aSI6ImYyMDc0ZjNhODRlNTQ1MWFhM2ZkNmZkNmQ0MTUzNWEzIiwidXNlcl9pZCI6MX0.DCl3Pdvw-s0KbL0-H-LbEKgntoUC6x4X6vNWsbXgYYs.Q2pLbTluK0NvY1cwVWJYdW1aVmxIRkNWRWVXckNLT0lIVjdRSkNpbzdjRUNma2NuZ3hLeTlxbWNsVW5CSjFBT09pMkt5UjJzWFJYejVzd2k2MmJQSGQzd0NtcjVsTnZ2dHN3TjUvRStkT09EeTZvRXdVMGJPbGVOTEVlS3RaUFV4Q2tISXI4MDVWR01mQ2tSVlZuOHVydDVnWWN3d3VSaUQvT0xJM25DcUJvWFNLTlpyUnMxSEJOSkVSMHJWYUFPTlRQTDhpay9wMFJRUUR5OURJR0lSUT09`
+      }
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const filename = fileType === 'excel' ? 'report.xlsx' : 'report.csv';
+      saveAs(blob, filename);
+      return true;
+    } else {
+      console.error('Direct download failed:', response.statusText);
+      return false;
+    }
+  } catch (error) {
+    console.error('Direct download error:', error);
+    return false;
+  }
+};
+
 export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
   try {
     // Convert base64 data to blob

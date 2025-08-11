@@ -25,6 +25,20 @@ const service = ChatBotSerice.enhanceEndpoints({
         responseHandler: (response) => response.blob(),
       }),
     }),
+    downloadExcelBinary: builder.query<Blob, void>({
+      query: () => ({
+        method: "GET",
+        url: `/download-excel`,
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
+    downloadCsvBinary: builder.query<Blob, void>({
+      query: () => ({
+        method: "GET",
+        url: `/download-csv`,
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
   }),
 });
 
