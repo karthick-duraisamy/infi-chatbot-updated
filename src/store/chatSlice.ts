@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { downloadFile, isBinaryResponse, detectFileType } from "../utils/downloadUtils";
+import { downloadFile, downloadBinaryFile, isBinaryResponse, detectFileType } from "../utils/downloadUtils";
 
 export interface User {
   firstName: string;
@@ -79,6 +79,16 @@ export const sendMessageToAI = createAsyncThunk<
     ) {
       jsonFileName = "last3months.json";
     } else if (
+      lowerMessage.includes("download excel") ||
+      lowerMessage.includes("excel")
+    ) {
+      jsonFileName = "sample_excel.json";
+    } else if (
+      lowerMessage.includes("download csv") ||
+      lowerMessage.includes("csv")
+    ) {
+      jsonFileName = "sample_csv.json";
+    } else if (
       lowerMessage.includes("report") ||
       lowerMessage.includes("get report")
     ) {
@@ -99,16 +109,17 @@ export const sendMessageToAI = createAsyncThunk<
 
       // Handle binary file downloads
       if (isBinaryResponse(result)) {
-        const fileName = message.split(' ').join('_'); // Simple filename generation
-        const fileType = detectFileType(result);
-        await downloadFile(result, fileName, fileType);
+        const downloadSuccess = await downloadBinaryFile(result);
+        const fileName = result.filename || 'report';
         return {
           id: "download-" + Date.now(),
           sender: "ai",
-          content: `<p>Your report ('${fileName}.${fileType}') has been downloaded successfully.</p>`,
+          content: downloadSuccess 
+            ? `<p>Your report ('${fileName}') has been downloaded successfully.</p>`
+            : `<p>Failed to download the report. Please try again.</p>`,
           timestamp: Date.now(),
           isDownload: true,
-          downloadSuccess: true,
+          downloadSuccess: downloadSuccess,
         };
       }
 

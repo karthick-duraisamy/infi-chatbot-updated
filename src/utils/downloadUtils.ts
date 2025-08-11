@@ -48,7 +48,30 @@ export const downloadFile = async (
   }
 };
 
+export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
+  try {
+    // Convert base64 data to blob
+    const binaryString = atob(binaryData.data);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    const blob = new Blob([bytes], { type: binaryData.contentType });
+    saveAs(blob, binaryData.filename);
+    return true;
+  } catch (error) {
+    console.error('Binary download error:', error);
+    return false;
+  }
+};
+
 export const isBinaryResponse = (response: any): boolean => {
+  // Check if response has binary data structure
+  if (response?.type === 'binary' && response?.data && response?.filename) {
+    return true;
+  }
+  
   // Check if response is binary data (not JSON structure)
   if (typeof response === 'string') {
     try {
@@ -64,6 +87,18 @@ export const isBinaryResponse = (response: any): boolean => {
 };
 
 export const detectFileType = (response: any): string => {
+  // Check if it's our binary response format
+  if (response?.type === 'binary' && response?.contentType) {
+    const contentType = response.contentType;
+    if (contentType.includes('excel') || contentType.includes('spreadsheet')) {
+      return 'xlsx';
+    } else if (contentType.includes('csv')) {
+      return 'csv';
+    } else if (contentType.includes('pdf')) {
+      return 'pdf';
+    }
+  }
+  
   // You can enhance this based on response headers or content
   const contentType = response?.headers?.['content-type'] || '';
   
