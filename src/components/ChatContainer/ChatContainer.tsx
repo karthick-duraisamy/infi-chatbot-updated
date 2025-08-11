@@ -159,9 +159,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ userId, token }) => {
                 New Chat
               </Button>
             </div>
-            <div className="theme-toggle-container">
+            {/* <div className="theme-toggle-container">
               <ThemeToggle />
-            </div>
+            </div> */}
           </div>
         )}
         <div
