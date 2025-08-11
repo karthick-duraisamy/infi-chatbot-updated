@@ -82,34 +82,14 @@ export const sendMessageToAI = createAsyncThunk<
       lowerMessage.includes("download excel") ||
       lowerMessage.includes("excel")
     ) {
-      // Trigger direct binary download
-      const downloadSuccess = await downloadDirectBinary('excel');
-      return {
-        id: "download-" + Date.now(),
-        sender: "ai",
-        content: downloadSuccess 
-          ? `<p>Your Excel report has been downloaded successfully.</p>`
-          : `<p>Failed to download the Excel report. Please try again.</p>`,
-        timestamp: Date.now(),
-        isDownload: true,
-        downloadSuccess: downloadSuccess,
-      };
+      // Return sample_excel.json as response
+      jsonFileName = "sample_excel.json";
     } else if (
       lowerMessage.includes("download csv") ||
       lowerMessage.includes("csv")
     ) {
-      // Trigger direct binary download
-      const downloadSuccess = await downloadDirectBinary('csv');
-      return {
-        id: "download-" + Date.now(),
-        sender: "ai",
-        content: downloadSuccess 
-          ? `<p>Your CSV report has been downloaded successfully.</p>`
-          : `<p>Failed to download the CSV report. Please try again.</p>`,
-        timestamp: Date.now(),
-        isDownload: true,
-        downloadSuccess: downloadSuccess,
-      };
+      // Return sample_csv.json as response
+      jsonFileName = "sample_csv.json";
     } else if (
       lowerMessage.includes("report") ||
       lowerMessage.includes("get report")
