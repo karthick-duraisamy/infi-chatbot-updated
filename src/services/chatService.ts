@@ -16,6 +16,32 @@ const service = ChatBotSerice.enhanceEndpoints({
         url: `/chat/completions`,
         body: requestInfo,
       }),
+      transformResponse: (response: any, meta: any) => {
+        // Check content type from response headers
+        const contentType = meta?.response?.headers?.get('content-type') || '';
+        
+        // If it's a binary response, return the blob with metadata
+        if (contentType.includes('application/octet-stream') ||
+            contentType.includes('application/vnd.openxmlformats') ||
+            contentType.includes('text/csv') ||
+            contentType.includes('application/pdf')) {
+          
+          // Extract filename from Content-Disposition header if available
+          const disposition = meta?.response?.headers?.get('content-disposition') || '';
+          const filenameMatch = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+          const filename = filenameMatch ? filenameMatch[1].replace(/['"]/g, '') : 'download';
+          
+          return {
+            blob: response,
+            filename: filename,
+            contentType: contentType,
+            isBinary: true
+          };
+        }
+        
+        // For JSON responses, return as is
+        return response;
+      },
     }),
     downloadReport: builder.mutation<Blob, any>({
       query: (requestInfo) => ({

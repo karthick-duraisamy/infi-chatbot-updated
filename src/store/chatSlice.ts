@@ -49,67 +49,70 @@ const initialState: ChatState = {
   },
 };
 
-// Dynamic local JSON response loading using Redux Toolkit Query
+// Dynamic response handling for both local and real backend API
 export const sendMessageToAI = createAsyncThunk<
   any,
-  { message: string; attachments?: any[]; requestData?: any }
+  { message: string; attachments?: any[]; requestData?: any; useRealAPI?: boolean }
 >(
   "chat/sendMessageToAI",
-  async ({ message, attachments, requestData }, { dispatch, extra }) => {
-    // Determine which JSON file to load based on message content
-    const lowerMessage = message.toLowerCase().trim();
-    let jsonFileName = "hello.json"; // default fallback
-
-    // Map common keywords to JSON files
-    if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
-      jsonFileName = "hello.json";
-    } else if (
-      lowerMessage.includes("booking") ||
-      lowerMessage.includes("flight")
-    ) {
-      jsonFileName = "bookingdetails.json";
-    } else if (
-      lowerMessage.includes("group") ||
-      lowerMessage.includes("request")
-    ) {
-      jsonFileName = "GroupRequestReport.json";
-    } else if (
-      lowerMessage.includes("last 3 months") ||
-      lowerMessage.includes("3 months")
-    ) {
-      jsonFileName = "last3months.json";
-    } else if (
-      lowerMessage.includes("download excel") ||
-      lowerMessage.includes("excel")
-    ) {
-      // Return sample_excel.json as response
-      jsonFileName = "sample_excel.json";
-    } else if (
-      lowerMessage.includes("download csv") ||
-      lowerMessage.includes("csv")
-    ) {
-      // Return sample_csv.json as response
-      jsonFileName = "sample_csv.json";
-    } else if (
-      lowerMessage.includes("report") ||
-      lowerMessage.includes("get report")
-    ) {
-      jsonFileName = "getthereport.json";
-    }
-
+  async ({ message, attachments, requestData, useRealAPI = false }, { dispatch, extra }) => {
     try {
       // Import the service endpoints
       const { ChatBotSerice } = await import("../services/service");
 
-      // Use the service's endpoints directly to fetch the JSON file
-      const result = await dispatch(
-        // (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(
-        //   requestData
-        // )
-        (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
-      ).unwrap();
+      let result;
+      
+      if (useRealAPI) {
+        // Call real backend API
+        result = await dispatch(
+          (ChatBotSerice as any)?.endpoints?.getChatResponse?.initiate(requestData)
+        ).unwrap();
+      } else {
+        // Determine which JSON file to load based on message content (local testing)
+        const lowerMessage = message.toLowerCase().trim();
+        let jsonFileName = "hello.json"; // default fallback
 
-      // Handle binary file downloads
+        // Map common keywords to JSON files
+        if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
+          jsonFileName = "hello.json";
+        } else if (
+          lowerMessage.includes("booking") ||
+          lowerMessage.includes("flight")
+        ) {
+          jsonFileName = "bookingdetails.json";
+        } else if (
+          lowerMessage.includes("group") ||
+          lowerMessage.includes("request")
+        ) {
+          jsonFileName = "GroupRequestReport.json";
+        } else if (
+          lowerMessage.includes("last 3 months") ||
+          lowerMessage.includes("3 months")
+        ) {
+          jsonFileName = "last3months.json";
+        } else if (
+          lowerMessage.includes("download excel") ||
+          lowerMessage.includes("excel")
+        ) {
+          jsonFileName = "sample_excel.json";
+        } else if (
+          lowerMessage.includes("download csv") ||
+          lowerMessage.includes("csv")
+        ) {
+          jsonFileName = "sample_csv.json";
+        } else if (
+          lowerMessage.includes("report") ||
+          lowerMessage.includes("get report")
+        ) {
+          jsonFileName = "getthereport.json";
+        }
+
+        result = await dispatch(
+          (ChatBotSerice as any)?.endpoints?.getresponse1data?.initiate(jsonFileName)
+        ).unwrap();
+      }
+
+      // Check if response is binary format (either from real API or mock data)
       if (isBinaryResponse(result)) {
         const downloadSuccess = await downloadBinaryFile(result);
         const fileName = result.filename || 'report';

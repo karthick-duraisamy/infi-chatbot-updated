@@ -81,15 +81,31 @@ export const downloadDirectBinary = async (fileType: 'excel' | 'csv'): Promise<b
 
 export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
   try {
-    // Convert base64 data to blob
-    const binaryString = atob(binaryData.data);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+    let blob: Blob;
+    let filename: string;
+    
+    // Handle mock binary response format (base64 encoded)
+    if (binaryData?.type === 'binary' && binaryData?.data) {
+      const binaryString = atob(binaryData.data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      blob = new Blob([bytes], { type: binaryData.contentType });
+      filename = binaryData.filename;
+    } 
+    // Handle real API binary response (Blob object)
+    else if (binaryData instanceof Blob) {
+      blob = binaryData;
+      filename = 'download'; // Default filename, should be extracted from headers
+    }
+    // Handle other binary formats
+    else {
+      console.error('Unsupported binary data format:', binaryData);
+      return false;
     }
     
-    const blob = new Blob([bytes], { type: binaryData.contentType });
-    saveAs(blob, binaryData.filename);
+    saveAs(blob, filename);
     return true;
   } catch (error) {
     console.error('Binary download error:', error);
@@ -98,9 +114,24 @@ export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
 };
 
 export const isBinaryResponse = (response: any): boolean => {
-  // Check if response has binary data structure
+  // Check if response has binary data structure (our mock format)
   if (response?.type === 'binary' && response?.data && response?.filename) {
     return true;
+  }
+  
+  // Check if response is a Blob object (real API binary response)
+  if (response instanceof Blob) {
+    return true;
+  }
+  
+  // Check if response has binary content type header
+  if (response?.headers && response?.headers['content-type']) {
+    const contentType = response.headers['content-type'];
+    return contentType.includes('application/octet-stream') ||
+           contentType.includes('application/vnd.openxmlformats') ||
+           contentType.includes('text/csv') ||
+           contentType.includes('application/pdf') ||
+           contentType.includes('application/zip');
   }
   
   // Check if response is binary data (not JSON structure)
@@ -114,7 +145,7 @@ export const isBinaryResponse = (response: any): boolean => {
   }
   
   // Check if response doesn't have the expected chat completion structure
-  return !response?.choices?.[0]?.message?.content;
+  return !response?.choices?.[0]?.message?.content && !response?.content;
 };
 
 export const detectFileType = (response: any): string => {
