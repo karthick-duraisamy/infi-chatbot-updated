@@ -1,4 +1,3 @@
-
 import { saveAs } from 'file-saver';
 import CryptoJS from 'crypto-js';
 
@@ -83,8 +82,8 @@ export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
   try {
     let blob: Blob;
     let filename: string;
-    
-    // Handle mock binary response format (base64 encoded)
+
+    // Case 1: Mock binary response format (base64 encoded)
     if (binaryData?.type === 'binary' && binaryData?.data) {
       const binaryString = atob(binaryData.data);
       const bytes = new Uint8Array(binaryString.length);
@@ -93,18 +92,22 @@ export const downloadBinaryFile = async (binaryData: any): Promise<boolean> => {
       }
       blob = new Blob([bytes], { type: binaryData.contentType });
       filename = binaryData.filename;
-    } 
-    // Handle real API binary response (Blob object)
+    }
+    // Case 2: API response in { blob, filename, contentType } format
+    else if (binaryData?.blob instanceof Blob) {
+      blob = binaryData.blob;
+      filename = binaryData.filename || 'download';
+    }
+    // Case 3: Raw Blob object
     else if (binaryData instanceof Blob) {
       blob = binaryData;
-      filename = 'download'; // Default filename, should be extracted from headers
+      filename = 'download';
     }
-    // Handle other binary formats
     else {
       console.error('Unsupported binary data format:', binaryData);
       return false;
     }
-    
+
     saveAs(blob, filename);
     return true;
   } catch (error) {
