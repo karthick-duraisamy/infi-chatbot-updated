@@ -133,8 +133,10 @@ export const sendMessageToAI = createAsyncThunk<
 
       // Return the entire JSON response object for text/html content
       return result;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading response:", error);
+
+      let errorMessage = error?.data?.detail ? error?.data?.detail : 'I apologize, but I encountered an error processing your request. Please try again or contact support.';
 
       // Fallback response if loading fails
       return {
@@ -143,7 +145,7 @@ export const sendMessageToAI = createAsyncThunk<
           {
             message: {
               role: "assistant",
-              content: `<p>I apologize, but I encountered an error processing your request. Please try again or contact support.</p>`,
+              content: `<p>${errorMessage}</p>`,
             },
           },
         ],
